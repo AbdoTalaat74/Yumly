@@ -7,11 +7,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.gymsapp"
+    namespace = "com.example.mealzapp"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.gymsapp"
+        applicationId = "com.example.mealzapp"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
