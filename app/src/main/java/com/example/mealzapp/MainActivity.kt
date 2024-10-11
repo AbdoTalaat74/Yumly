@@ -1,6 +1,7 @@
 package com.example.mealzapp
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -31,7 +32,11 @@ class MainActivity : ComponentActivity() {
             MealsAppTheme(darkTheme = isSystemInDarkTheme()) {
                 val viewModel : MainViewModel = hiltViewModel()
 
-                MainScreen(viewModel.state.value)
+                MainScreen(viewModel.state.value, onClickItem = { categoryName ->
+
+                    Toast.makeText(this,categoryName,Toast.LENGTH_SHORT).show()
+
+                })
             }
         }
     }

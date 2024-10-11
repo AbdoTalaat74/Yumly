@@ -1,6 +1,7 @@
 package com.example.mealzapp.composables
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
@@ -19,12 +20,13 @@ import coil.compose.rememberImagePainter
 import com.example.mealzapp.meals.data.local.Category
 
 @Composable
-fun CategoryCard(category: Category) {
+fun CategoryCard(category: Category,onClick:(Category)->Unit) {
     Card(
         shape = RoundedCornerShape(8.dp),
         elevation = CardDefaults.cardElevation(4.dp),
         modifier = Modifier
             .padding(8.dp)
+            .clickable { onClick(category) }
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,

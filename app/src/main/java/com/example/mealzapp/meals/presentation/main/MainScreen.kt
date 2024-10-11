@@ -28,7 +28,8 @@ import com.example.mealzapp.composables.CategoryCard
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(
-    state: CategoryState
+    state: CategoryState,
+    onClickItem:(categoryName: String) -> Unit
 ) {
     Scaffold(modifier = Modifier.fillMaxSize(), topBar = {
         TopAppBar(
@@ -64,7 +65,9 @@ fun MainScreen(
             ) {
                 items(state.categories) { category ->
                     CategoryCard(
-                        category = category
+                        category = category,
+                        onClick = {onClickItem(category.strCategory)}
+
                     )
                 }
             }
