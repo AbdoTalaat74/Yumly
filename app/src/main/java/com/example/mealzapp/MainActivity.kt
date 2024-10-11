@@ -15,8 +15,13 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.mealzapp.meals.presentation.main.MainScreen
+import com.example.mealzapp.meals.presentation.main.MainViewModel
 import com.example.mealzapp.ui.theme.MealsAppTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,19 +29,9 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             MealsAppTheme(darkTheme = isSystemInDarkTheme()) {
+                val viewModel : MainViewModel = hiltViewModel()
 
-                Scaffold(modifier = Modifier.fillMaxSize(), topBar = {
-                    TopAppBar(
-                        title = { Text(text = "Meals App") },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .shadow(elevation = 4.dp)
-                    )
-                }) { paddingValues ->
-
-                    Text(text = "Initial", modifier = Modifier.padding(top = paddingValues.calculateTopPadding()))
-                }
-
+                MainScreen(viewModel.state.value)
             }
         }
     }
