@@ -10,6 +10,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.mealzapp.meals.domain.GetCategoriesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 

@@ -25,7 +25,7 @@ object MealsDataModule {
             .addConverterFactory(
                 GsonConverterFactory.create()
             )
-            .baseUrl("https://www.themealdb.com/")
+            .baseUrl("https://www.themealdb.com/api/json/v1/1/")
             .build()
     }
 }

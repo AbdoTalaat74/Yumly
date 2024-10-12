@@ -17,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -24,6 +25,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.mealzapp.R
 import com.example.mealzapp.composables.CategoryCard
+import com.example.mealzapp.ui.theme.PurpleGrey40
+import com.example.mealzapp.ui.theme.PurpleGrey80
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -31,24 +34,19 @@ fun MainScreen(
     state: CategoryState,
     onClickItem:(categoryName: String) -> Unit
 ) {
-    Scaffold(modifier = Modifier.fillMaxSize(), topBar = {
-        TopAppBar(
-            title = { Text(text = "Meals App") },
-            modifier = Modifier
-                .fillMaxWidth()
-                .shadow(elevation = 4.dp)
-        )
-    }) { paddingValues ->
 
+    Box(modifier = Modifier.fillMaxSize()){
+        // Show loading spinner when the state is loading
+        if (state.isLoading) {
+            Box(modifier = Modifier.fillMaxSize().padding(8.dp), contentAlignment = Alignment.Center) {
+                CircularProgressIndicator(color = PurpleGrey80)
+            }
+        }
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(
-                    top = paddingValues.calculateTopPadding(),
-                    bottom = paddingValues.calculateBottomPadding(),
-                )
+
         ) {
-            // This will place the Text at the top, above the LazyRow
             Text(
                 text = stringResource(R.string.categories),
                 style = TextStyle(fontSize = 24.sp, fontWeight = FontWeight.SemiBold),
@@ -71,13 +69,8 @@ fun MainScreen(
                     )
                 }
             }
-
-            // Show loading spinner when the state is loading
-            if (state.isLoading) {
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    CircularProgressIndicator()
-                }
-            }
         }
     }
-}
+
+    }
+

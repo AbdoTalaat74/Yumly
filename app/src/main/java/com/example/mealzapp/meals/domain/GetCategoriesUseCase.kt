@@ -11,5 +11,5 @@ class GetCategoriesUseCase @Inject constructor(
 
 
 
-    suspend operator fun invoke() : List<Category> = mealsRepository.getCategories()
+    suspend operator fun invoke() = mealsRepository.getCategories()
 }
