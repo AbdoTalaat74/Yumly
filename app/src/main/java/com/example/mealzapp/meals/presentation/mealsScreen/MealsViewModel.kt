@@ -26,15 +26,14 @@ class MealsViewModel @Inject constructor(
     private var categoryName:String
 
     private var _mealsState by mutableStateOf(
-        MealState(
+        MealsState(
             meals = emptyList(),
             isLoading = false,
         )
     )
-    val mealsState: State<MealState>
+    val mealsState: State<MealsState>
         get() = derivedStateOf { _mealsState }
 
-    var isLoadingPage = false
     private var currentPage = 0
     private var endReached = false
     private val pageSize = 8

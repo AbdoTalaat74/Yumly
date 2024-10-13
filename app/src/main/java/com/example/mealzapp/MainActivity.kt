@@ -1,6 +1,7 @@
 package com.example.mealzapp
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -24,6 +25,8 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.mealzapp.meals.presentation.main.MainScreen
 import com.example.mealzapp.meals.presentation.main.MainViewModel
+import com.example.mealzapp.meals.presentation.meal_details.MealDetailsViewModel
+import com.example.mealzapp.meals.presentation.meal_details.MealScreen
 import com.example.mealzapp.meals.presentation.mealsScreen.MealsScreen
 import com.example.mealzapp.meals.presentation.mealsScreen.MealsViewModel
 import com.example.mealzapp.ui.theme.MealsAppTheme
@@ -86,8 +89,21 @@ fun MealsAroundApp(modifier: Modifier) {
             val mealsViewModel: MealsViewModel = hiltViewModel()
             MealsScreen(
                 state = mealsViewModel.mealsState.value,
-                onItemClick = {}
+                onItemClick = {
+                    navController.navigate(route = "meal/${it.idMeal}")
+                    Log.i("MealIdNavigation",it.idMeal.toString())
+                }
             )
+        }
+
+        composable(route = "meal/{meal_id}",arguments = listOf(
+            navArgument("meal_id"){
+                type = NavType.IntType
+            }
+        )
+        ) {
+            val mealDetailsViewModel:MealDetailsViewModel = hiltViewModel()
+            MealScreen(mealDetailsViewModel.mealState.value)
         }
     }
 }
