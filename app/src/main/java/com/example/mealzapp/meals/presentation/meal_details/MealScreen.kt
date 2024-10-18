@@ -25,13 +25,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import com.example.mealzapp.R
+import com.example.mealzapp.composables.AreaCard
 import com.example.mealzapp.composables.InfoRow
 import com.example.mealzapp.composables.MealIngredient
 import com.example.mealzapp.meals.data.local.Meal
 import com.example.mealzapp.meals.data.local.getIngredientsList
 import com.example.mealzapp.ui.theme.Brown
 import com.example.mealzapp.ui.theme.Orange
-import com.example.mealzapp.utils.getFlagDrawable
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
@@ -68,12 +68,8 @@ fun MealScreen(mealState: MealState) {
             }
 
             val mealArea = mealState.meal?.strArea ?: "Unknown"
-            val flagRes = getFlagDrawable(mealState.meal?.strArea ?: "Unknown")
 
-            val painter = painterResource(flagRes)
-
-
-            InfoRow(iconRes = painter, text = mealArea)
+            AreaCard(area = mealArea)
 
 
         }
@@ -142,7 +138,6 @@ fun IngredientsSection(meal: Meal) {
                 MealIngredient(
                     ingredient = ingredients[index].first,
                     measure = ingredients[index].second,
-                    ingredientImage =ingredients[index].first
                 )
             }
         }
