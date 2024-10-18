@@ -12,7 +12,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.mealzapp.meals.domain.GetMealsByCategoryUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -58,7 +57,6 @@ class MealsViewModel @Inject constructor(
 
         viewModelScope.launch(Dispatchers.IO) {
             val newMeals = getMealsByCategoryUseCase.getMealsByCategory(categoryName,currentPage * pageSize, pageSize)
-            delay(1000)
             if (newMeals.isNotEmpty()){
                 _mealsState = _mealsState.copy(
                     meals = mealsState.value.meals + newMeals,

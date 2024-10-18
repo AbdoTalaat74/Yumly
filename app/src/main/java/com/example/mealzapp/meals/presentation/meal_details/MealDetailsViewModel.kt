@@ -10,6 +10,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.mealzapp.meals.data.local.Meal
 import com.example.mealzapp.meals.domain.GetMealDetailsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -26,21 +27,22 @@ class MealDetailsViewModel @Inject constructor(
 
     private var _mealState by mutableStateOf(
         MealState(
-            meal = null,
+            meal = Meal(),
             isLoading = true,
         )
     )
-    val mealState : State<MealState>
-        get() = derivedStateOf { _mealState }
+    val mealState: State<MealState> = derivedStateOf { _mealState }
 
 
     init {
         val passedArgument: Int? = savedStateHandle.get<Int>("meal_id")
         mealId = passedArgument ?: 0
 
-        if (mealId == 0){
-            Log.e("MealDetailsViewModelGetMeal","No Data Fetched, id is wrong")
-        }else{
+        Log.e("MealDetailsViewMealId", mealId.toString())
+
+        if (mealId == 0) {
+            Log.e("MealDetailsViewModelGetMeal", "No Data Fetched, id is wrong")
+        } else {
             getMealDetails(mealId)
         }
 
@@ -50,20 +52,18 @@ class MealDetailsViewModel @Inject constructor(
 
     private fun getMealDetails(mealId: Int) {
 
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(Dispatchers.Main) {
             val meal = getMealDetailsUseCase.getMealDetails(mealId).meals.firstOrNull()
-            if (meal != null){
+            if (meal != null) {
                 _mealState = _mealState.copy(
                     meal = meal,
                     isLoading = false
                 )
-                Log.e("MealDetailsViewModelGetMeal","Meal Fetched Successfully: \n $meal.")
-            }else{
-                Log.e("MealDetailsViewModelGetMeal","Error.")
+                Log.e("MealDetailsViewModelGetMeal", "Meal Fetched Successfully: \n $meal.")
+            } else {
+                Log.e("MealDetailsViewModelGetMeal", "Error.")
             }
-
-
-
+            Log.e("MealDetailsViewModelGetMeal", "Meal Fetched Successfully: \n $meal.")
 
 
         }
