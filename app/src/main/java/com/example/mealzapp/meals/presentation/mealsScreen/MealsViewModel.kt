@@ -9,6 +9,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.mealzapp.meals.domain.GetMealsByAreaUseCase
 import com.example.mealzapp.meals.domain.GetMealsByCategoryUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -18,12 +19,12 @@ import javax.inject.Inject
 @HiltViewModel
 class MealsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val getMealsByCategoryUseCase: GetMealsByCategoryUseCase
-) : ViewModel(){
+    private val getMealsByCategoryUseCase: GetMealsByCategoryUseCase,
+    private val getMealsByAreaUseCase: GetMealsByAreaUseCase
+) : ViewModel() {
 
 
-    private var categoryName:String
-
+    private var filterBy: String
     private var _mealsState by mutableStateOf(
         MealsState(
             meals = emptyList(),
@@ -40,30 +41,39 @@ class MealsViewModel @Inject constructor(
 
     init {
 
-        val passedArgument: String? = savedStateHandle.get<String>("category_name")
+        val filterKeyArgument: String? = savedStateHandle.get<String>("filter_key")
+        val searchTypeArgument: String? = savedStateHandle.get<String>("search_type")
 
-        categoryName = passedArgument ?: ""
-
-        Log.e("MealsViewModelArgument",categoryName)
-        getCategoryByName()
+        filterBy = filterKeyArgument ?: ""
+        Log.e("MealsViewModelArgument", filterBy)
+        when (searchTypeArgument) {
+            "category" -> getMealsByCategoryName(filterBy)
+            "area" -> getMealsByAreaName(filterBy)
+        }
 
 
     }
 
-    fun getCategoryByName() {
+
+    fun getMealsByCategoryName(categoryName: String) {
 
         if (_mealsState.isLoading || endReached) return
         _mealsState.isLoading = true
 
         viewModelScope.launch(Dispatchers.IO) {
-            val newMeals = getMealsByCategoryUseCase.getMealsByCategory(categoryName,currentPage * pageSize, pageSize)
-            if (newMeals.isNotEmpty()){
+
+            val newMeals = getMealsByCategoryUseCase.getMealsByCategory(
+                categoryName,
+                currentPage * pageSize,
+                pageSize
+            )
+            if (newMeals.isNotEmpty()) {
                 _mealsState = _mealsState.copy(
                     meals = mealsState.value.meals + newMeals,
                     isLoading = false
                 )
                 currentPage++
-            }else{
+            } else {
                 endReached = true
             }
 
@@ -74,5 +84,33 @@ class MealsViewModel @Inject constructor(
         }
     }
 
+    private fun getMealsByAreaName(areaName: String) {
 
+        if (_mealsState.isLoading || endReached) return
+        _mealsState.isLoading = true
+
+        viewModelScope.launch(Dispatchers.IO) {
+
+            val newMeals = getMealsByAreaUseCase.getMealsByArea(
+                areaName,
+                currentPage * pageSize,
+                pageSize
+            )
+            if (newMeals.isNotEmpty()) {
+                _mealsState = _mealsState.copy(
+                    meals = mealsState.value.meals + newMeals,
+                    isLoading = false
+                )
+                currentPage++
+            } else {
+                endReached = true
+            }
+        }
+
+
+        Log.e("MealsViewModelGetMealsByAreaName",areaName)
+
+    }
 }
+
+

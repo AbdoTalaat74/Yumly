@@ -1,26 +1,32 @@
 package com.example.mealzapp.meals.presentation.meal_details
 
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
@@ -28,9 +34,9 @@ import com.example.mealzapp.R
 import com.example.mealzapp.composables.AreaCard
 import com.example.mealzapp.composables.InfoRow
 import com.example.mealzapp.composables.MealIngredient
+import com.example.mealzapp.composables.MoreSectionItem
 import com.example.mealzapp.meals.data.local.Meal
 import com.example.mealzapp.meals.data.local.getIngredientsList
-import com.example.mealzapp.ui.theme.Brown
 import com.example.mealzapp.ui.theme.Orange
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
@@ -39,7 +45,12 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun MealScreen(mealState: MealState) {
+fun MealScreen(
+    mealState: MealState,
+    onCategoryClick: (String) -> Unit,
+    onAreaClick: (String) -> Unit,
+    onIngredientClick:(String) ->Unit
+) {
     val pageState = rememberPagerState()
     val scope = rememberCoroutineScope()
     val tabTitles = listOf("Ingredients", "Instructions", "More")
@@ -56,27 +67,26 @@ fun MealScreen(mealState: MealState) {
         Spacer(modifier = Modifier.height(16.dp))
         Row(
             modifier = Modifier
-                .fillMaxWidth(), horizontalArrangement = Arrangement.SpaceAround
+                .fillMaxWidth()
+                .padding(start = 8.dp)
         ) {
 
-            mealState.meal?.strCategory?.let {
+            mealState.meal?.strCategory?.let { categoryName ->
                 InfoRow(
                     iconRes = painterResource(R.drawable.category),
-                    text = it,
-                    tint = Brown
+                    text = categoryName,
+                    onClick = { onCategoryClick(categoryName) },
+                    categoryName = categoryName
                 )
             }
 
             val mealArea = mealState.meal?.strArea ?: "Unknown"
-
-            AreaCard(area = mealArea)
-
-
+            AreaCard(area = mealArea) {
+                onAreaClick(it)
+            }
         }
 
         Spacer(modifier = Modifier.height(24.dp))
-
-
         ScrollableTabRow(
             selectedTabIndex = pageState.currentPage,
             containerColor = Color.Unspecified,
@@ -105,13 +115,6 @@ fun MealScreen(mealState: MealState) {
             }
         }
 
-
-
-
-
-
-
-
         HorizontalPager(
             modifier = Modifier
                 .fillMaxWidth()
@@ -121,8 +124,13 @@ fun MealScreen(mealState: MealState) {
         ) { page ->
             when (page) {
                 0 -> mealState.meal?.let { IngredientsSection(it) }
-                1 -> InstructionsSection()
-                2 -> MoreSection()
+                1 -> mealState.meal?.strInstructions?.let { InstructionsSection(it) }
+                2 -> mealState.meal?.let {
+                    MoreSection(
+                        it.strSource ?: "https://www.google.com",
+                        it.strYoutube ?: "https://www.youtube.com/"
+                    )
+                }
             }
         }
     }
@@ -133,60 +141,73 @@ fun MealScreen(mealState: MealState) {
 fun IngredientsSection(meal: Meal) {
     val ingredients = meal.getIngredientsList()
     if (ingredients.isNotEmpty()) {
-        LazyColumn {
+        LazyColumn(modifier = Modifier.padding(horizontal = 8.dp)) {
             items(ingredients.size) { index ->
                 MealIngredient(
                     ingredient = ingredients[index].first,
                     measure = ingredients[index].second,
+                    onClick = {
+                        //TODO
+                    }
                 )
             }
         }
     }
-
-
 }
 
 @Composable
-fun InstructionsSection() {
-    Text("InstructionsSection")
+fun InstructionsSection(instructions: String) {
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 8.dp)
+    ) {
+        item {
+            Text(
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                text = instructions, style = TextStyle(
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Medium
+
+                )
+            )
+        }
+    }
 }
 
 @Composable
-fun MoreSection() {
-    Text("MoreSection")
+fun MoreSection(resourceLink: String, youtubeLink: String) {
+    val context = LocalContext.current
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.Start
+    ) {
+        MoreSectionItem(
+            modifier = Modifier.clickable {
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(resourceLink))
+            context.startActivity(intent)
+        }, text = "Resource",
+            iconRes = R.drawable.baseline_insert_link_24)
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        MoreSectionItem(
+            modifier = Modifier.clickable {
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(youtubeLink))
+                context.startActivity(intent)
+            },
+            text = "Youtube Link",
+            iconRes = R.drawable.basline_youtub_icon,
+        )
+
+    }
 }
 
 
-val sampleMeal = Meal(
-    idMeal = "52772",
-    strMeal = "Teriyaki Chicken Casserole",
-    strCategory = "Chicken",
-    strArea = "Japanese",
-    strInstructions = "Preheat oven to 350°F. Combine ingredients and bake.",
-    strMealThumb = "https://www.themealdb.com/images/media/meals/wvpsxx1468256321.jpg",
-    strTags = "Meat,Casserole",
-    strYoutube = "https://www.youtube.com/watch?v=4aZr5hZXP_s",
-    strIngredient1 = "Soy",
-    strIngredient2 = "Water",
-    strIngredient3 = "Brown Sugar",
-    strIngredient4 = "Ground Ginger",
-    strIngredient5 = "Minced Garlic",
-    strMeasure1 = "3/4 cup",
-    strMeasure2 = "1/2 cup",
-    strMeasure3 = "1/4 cup",
-    strMeasure4 = "1/2 tsp",
-    strMeasure5 = "4 tbsp"
-)
-
-val sampleState = MealState(
-    meal = sampleMeal, isLoading = false, error = null
-)
 
 
-@Preview(showSystemUi = true)
-@Composable
-fun MealScreenPreview() {
-
-    MealScreen(sampleState)
-}
 

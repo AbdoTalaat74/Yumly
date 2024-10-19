@@ -2,6 +2,7 @@ package com.example.mealzapp.composables
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
@@ -28,13 +30,20 @@ import com.example.mealzapp.ui.theme.Orange
 fun MealIngredient(
     ingredient: String?,
     measure: String?,
+    onClick: (ingredient: String) -> Unit
 
 ) {
 
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp), verticalAlignment = Alignment.CenterVertically
+            .padding(8.dp)
+            .clickable {
+                if (ingredient != null) {
+                    onClick(ingredient)
+                }
+            }
+        , verticalAlignment = Alignment.CenterVertically
     ) {
         AsyncImage(
             model = "https://www.themealdb.com/images/ingredients/$ingredient.png",
@@ -46,8 +55,8 @@ fun MealIngredient(
                 .clip(
                     CircleShape
                 )
-                .border(3.dp, Orange, CircleShape)
-                .padding(16.dp)
+                .border(2.dp, Orange, CircleShape)
+                .padding(8.dp)
         )
 
         Spacer(modifier = Modifier.width(24.dp))
@@ -56,7 +65,7 @@ fun MealIngredient(
                 modifier = Modifier.align(Alignment.CenterVertically),
                 text = ingredient,
                 textAlign = TextAlign.Center,
-                style = TextStyle(fontSize = 24.sp)
+                style = TextStyle(fontSize = 22.sp)
             )
         }
         if (!measure.isNullOrBlank()) {
@@ -64,7 +73,7 @@ fun MealIngredient(
                 modifier = Modifier.fillMaxWidth(),
                 text = measure,
                 textAlign = TextAlign.End,
-                style = TextStyle(fontSize = 16.sp, color = Orange)
+                style = TextStyle(fontSize = 16.sp, color = Color.Gray)
             )
 
         }

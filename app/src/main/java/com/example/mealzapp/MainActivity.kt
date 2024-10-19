@@ -37,6 +37,7 @@ class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         enableEdgeToEdge()
 
 
@@ -67,43 +68,57 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun MealsAroundApp(modifier: Modifier) {
+    lateinit var searchType: String
     val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = "main",modifier = modifier) {
+    NavHost(navController = navController, startDestination = "main", modifier = modifier) {
         composable(route = "main") {
             val mainViewModel: MainViewModel = hiltViewModel()
+            searchType = "category"
             MainScreen(
                 state = mainViewModel.state.value,
                 onClickItem = { categoryName ->
 
-                    navController.navigate("meals/$categoryName")
+                    navController.navigate("meals/$categoryName/$searchType")
 
                 }
             )
         }
 
-        composable(route = "meals/{category_name}", arguments = listOf(
-            navArgument("category_name") {
-                type = NavType.StringType
-            }
+        composable(route = "meals/{filter_key}/{search_type}", arguments = listOf(
+            navArgument("filter_key") { type = NavType.StringType },
+            navArgument("search_type") { NavType.StringType }
         )) {
             val mealsViewModel: MealsViewModel = hiltViewModel()
             MealsScreen(
                 state = mealsViewModel.mealsState.value,
                 onItemClick = {
                     navController.navigate(route = "meal/${it.idMeal}")
-                    Log.i("MealIdNavigation",it.idMeal.toString())
+                    Log.i("MealIdNavigation", it.idMeal.toString())
                 }
             )
         }
 
-        composable(route = "meal/{meal_id}",arguments = listOf(
-            navArgument("meal_id"){
+        composable(route = "meal/{meal_id}", arguments = listOf(
+            navArgument("meal_id") {
                 type = NavType.IntType
             }
         )
         ) {
-            val mealDetailsViewModel:MealDetailsViewModel = hiltViewModel()
-            MealScreen(mealDetailsViewModel.mealState.value)
+            val mealDetailsViewModel: MealDetailsViewModel = hiltViewModel()
+            val categoryName = mealDetailsViewModel.mealState.value.meal?.strCategory
+
+            MealScreen(mealDetailsViewModel.mealState.value, onCategoryClick = {
+                searchType = "category"
+                navController.navigate(route = "meals/$categoryName/$searchType")
+            },
+                onAreaClick = {
+                    searchType = "area"
+                    navController.navigate(route = "meals/$it/$searchType")
+                }
+                , onIngredientClick = {
+
+                }
+            )
         }
     }
 }

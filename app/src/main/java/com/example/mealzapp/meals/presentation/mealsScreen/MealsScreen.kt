@@ -33,7 +33,7 @@ fun MealsScreen(state: MealsState, onItemClick: (Meal) -> Unit) {
                     }
                 )
                 if (index == state.meals.size - 1) {
-                    mealsViewModel.getCategoryByName()
+                    state.meals[index].strCategory?.let { mealsViewModel.getMealsByCategoryName(it) }
                 }
             }
         }

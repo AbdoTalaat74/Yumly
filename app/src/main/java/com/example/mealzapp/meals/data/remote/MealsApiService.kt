@@ -18,4 +18,8 @@ interface MealsApiService {
         @Query("i") mealId:Int
     ): MealsResponse
 
+    @GET("filter.php")
+    suspend fun getMealsByArea(
+        @Query("a") areaName: String
+    ): MealsResponse
 }

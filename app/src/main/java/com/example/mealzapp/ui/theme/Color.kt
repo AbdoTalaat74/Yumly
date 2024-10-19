@@ -13,6 +13,6 @@ val Pink40 = Color(0xFF7D5260)
 val WhiteSmoke = Color(0xFFFCF1F1)
 
 
-val Brown = Color(0xFF654321)
 
 val Orange = Color(0xFFFF5722)
+
