@@ -37,12 +37,13 @@ fun MealIngredient(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp)
             .clickable {
                 if (ingredient != null) {
                     onClick(ingredient)
                 }
             }
+            .padding(8.dp)
+
         , verticalAlignment = Alignment.CenterVertically
     ) {
         AsyncImage(

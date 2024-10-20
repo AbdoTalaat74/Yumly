@@ -70,9 +70,10 @@ class MainActivity : ComponentActivity() {
 fun MealsAroundApp(modifier: Modifier) {
     lateinit var searchType: String
     val navController = rememberNavController()
+    val mainViewModel: MainViewModel = hiltViewModel()
+
     NavHost(navController = navController, startDestination = "main", modifier = modifier) {
         composable(route = "main") {
-            val mainViewModel: MainViewModel = hiltViewModel()
             searchType = "category"
             MainScreen(
                 state = mainViewModel.state.value,
@@ -105,6 +106,7 @@ fun MealsAroundApp(modifier: Modifier) {
         )
         ) {
             val mealDetailsViewModel: MealDetailsViewModel = hiltViewModel()
+
             val categoryName = mealDetailsViewModel.mealState.value.meal?.strCategory
 
             MealScreen(mealDetailsViewModel.mealState.value, onCategoryClick = {
@@ -116,10 +118,20 @@ fun MealsAroundApp(modifier: Modifier) {
                     navController.navigate(route = "meals/$it/$searchType")
                 }
                 , onIngredientClick = {
-
+                    searchType = "ingredient"
+                    navController.navigate(route = "meals/$it/$searchType")
+                },
+                onImageClick = {
+//                    navController.navigate(route = "mealImage")
                 }
             )
         }
+
+//        composable(route = "mealImage")
+//        {
+//            val mealDetailsViewModel: MealDetailsViewModel = hiltViewModel()
+//            mealDetailsViewModel.mealState.value.meal?.strMealThumb?.let { it1 -> MealImageScreen(it1) }
+//        }
     }
 }
 

@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.mealzapp.meals.domain.GetMealsByAreaUseCase
 import com.example.mealzapp.meals.domain.GetMealsByCategoryUseCase
+import com.example.mealzapp.meals.domain.GetMealsByIngredientUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -20,7 +21,8 @@ import javax.inject.Inject
 class MealsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val getMealsByCategoryUseCase: GetMealsByCategoryUseCase,
-    private val getMealsByAreaUseCase: GetMealsByAreaUseCase
+    private val getMealsByAreaUseCase: GetMealsByAreaUseCase,
+    private val getMealsByIngredientUseCase: GetMealsByIngredientUseCase
 ) : ViewModel() {
 
 
@@ -49,6 +51,7 @@ class MealsViewModel @Inject constructor(
         when (searchTypeArgument) {
             "category" -> getMealsByCategoryName(filterBy)
             "area" -> getMealsByAreaName(filterBy)
+            "ingredient" -> getMealsByIngredient(filterBy)
         }
 
 
@@ -77,10 +80,6 @@ class MealsViewModel @Inject constructor(
                 endReached = true
             }
 
-
-
-            Log.e("MealsViewModelGetCategoryByName", _mealsState.meals.toString())
-
         }
     }
 
@@ -107,8 +106,29 @@ class MealsViewModel @Inject constructor(
             }
         }
 
+    }
 
-        Log.e("MealsViewModelGetMealsByAreaName",areaName)
+    private fun getMealsByIngredient(ingredient: String) {
+        if (_mealsState.isLoading || endReached) return
+        _mealsState.isLoading = true
+
+        viewModelScope.launch(Dispatchers.IO) {
+
+            val newMeals = getMealsByIngredientUseCase.getMealsByIngredient(
+                ingredient,
+                currentPage * pageSize,
+                pageSize
+            )
+            if (newMeals.isNotEmpty()) {
+                _mealsState = _mealsState.copy(
+                    meals = mealsState.value.meals + newMeals,
+                    isLoading = false
+                )
+                currentPage++
+            } else {
+                endReached = true
+            }
+        }
 
     }
 }

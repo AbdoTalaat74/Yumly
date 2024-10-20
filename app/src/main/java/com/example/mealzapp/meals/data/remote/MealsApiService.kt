@@ -1,6 +1,5 @@
 package com.example.mealzapp.meals.data.remote
 
-import com.example.mealzapp.meals.data.local.Meal
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -21,5 +20,10 @@ interface MealsApiService {
     @GET("filter.php")
     suspend fun getMealsByArea(
         @Query("a") areaName: String
+    ): MealsResponse
+
+    @GET("filter.php")
+    suspend fun getMealsByIngredient(
+        @Query("i") ingredient: String
     ): MealsResponse
 }

@@ -23,4 +23,9 @@ class MealsRepository @Inject constructor(
         val allMeals = apiService.getMealsByArea(areaName).meals
         return allMeals.drop(offset).take(limit)
     }
+
+    suspend fun getMealsByIngredient(ingredient:String,offset: Int,limit: Int) : List<Meal> {
+        val allMeals = apiService.getMealsByIngredient(ingredient).meals
+        return allMeals.drop(offset).take(limit)
+    }
 }

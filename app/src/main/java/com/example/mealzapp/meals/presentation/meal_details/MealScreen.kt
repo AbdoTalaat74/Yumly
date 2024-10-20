@@ -49,19 +49,22 @@ fun MealScreen(
     mealState: MealState,
     onCategoryClick: (String) -> Unit,
     onAreaClick: (String) -> Unit,
-    onIngredientClick:(String) ->Unit
+    onIngredientClick: (String) -> Unit,
+    onImageClick:(String)->Unit
 ) {
     val pageState = rememberPagerState()
     val scope = rememberCoroutineScope()
     val tabTitles = listOf("Ingredients", "Instructions", "More")
-
     Column(modifier = Modifier.fillMaxSize()) {
         Image(
             painter = rememberAsyncImagePainter(mealState.meal?.strMealThumb),
             contentDescription = "",
             modifier = Modifier
                 .fillMaxWidth()
-                .fillMaxHeight(0.25f),
+                .fillMaxHeight(0.25f)
+                .clickable {
+                    mealState.meal?.strMealThumb?.let { onImageClick(it) }
+                },
             contentScale = ContentScale.Crop,
         )
         Spacer(modifier = Modifier.height(16.dp))
@@ -123,7 +126,12 @@ fun MealScreen(
             state = pageState,
         ) { page ->
             when (page) {
-                0 -> mealState.meal?.let { IngredientsSection(it) }
+                0 -> mealState.meal?.let { meal ->
+                    IngredientsSection(meal, onIngredientClick = { ingredient ->
+                        onIngredientClick(ingredient)
+                    })
+                }
+
                 1 -> mealState.meal?.strInstructions?.let { InstructionsSection(it) }
                 2 -> mealState.meal?.let {
                     MoreSection(
@@ -135,10 +143,12 @@ fun MealScreen(
         }
     }
 
+
+
 }
 
 @Composable
-fun IngredientsSection(meal: Meal) {
+fun IngredientsSection(meal: Meal, onIngredientClick: (String) -> Unit) {
     val ingredients = meal.getIngredientsList()
     if (ingredients.isNotEmpty()) {
         LazyColumn(modifier = Modifier.padding(horizontal = 8.dp)) {
@@ -147,7 +157,7 @@ fun IngredientsSection(meal: Meal) {
                     ingredient = ingredients[index].first,
                     measure = ingredients[index].second,
                     onClick = {
-                        //TODO
+                        onIngredientClick(it)
                     }
                 )
             }
@@ -155,12 +165,15 @@ fun IngredientsSection(meal: Meal) {
     }
 }
 
+
 @Composable
 fun InstructionsSection(instructions: String) {
     LazyColumn(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 8.dp)
+            .fillMaxSize()
+            .padding(top = 8.dp),
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.Start
     ) {
         item {
             Text(
@@ -188,10 +201,11 @@ fun MoreSection(resourceLink: String, youtubeLink: String) {
     ) {
         MoreSectionItem(
             modifier = Modifier.clickable {
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(resourceLink))
-            context.startActivity(intent)
-        }, text = "Resource",
-            iconRes = R.drawable.baseline_insert_link_24)
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(resourceLink))
+                context.startActivity(intent)
+            }, text = "Resource",
+            iconRes = R.drawable.baseline_insert_link_24
+        )
 
         Spacer(modifier = Modifier.height(16.dp))
 

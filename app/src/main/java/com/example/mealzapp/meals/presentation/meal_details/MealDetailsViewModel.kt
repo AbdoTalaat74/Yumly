@@ -24,7 +24,6 @@ class MealDetailsViewModel @Inject constructor(
 ) : ViewModel() {
 
     private var mealId: Int
-
     private var _mealState by mutableStateOf(
         MealState(
             meal = Meal(),
