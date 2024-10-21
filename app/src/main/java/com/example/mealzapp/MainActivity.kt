@@ -1,5 +1,6 @@
 package com.example.mealzapp
 
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -23,9 +24,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.mealzapp.meals.presentation.full_image.FullImageViewModel
 import com.example.mealzapp.meals.presentation.main.MainScreen
 import com.example.mealzapp.meals.presentation.main.MainViewModel
 import com.example.mealzapp.meals.presentation.meal_details.MealDetailsViewModel
+import com.example.mealzapp.meals.presentation.full_image.FullImageScreen
 import com.example.mealzapp.meals.presentation.meal_details.MealScreen
 import com.example.mealzapp.meals.presentation.mealsScreen.MealsScreen
 import com.example.mealzapp.meals.presentation.mealsScreen.MealsViewModel
@@ -122,16 +125,20 @@ fun MealsAroundApp(modifier: Modifier) {
                     navController.navigate(route = "meals/$it/$searchType")
                 },
                 onImageClick = {
-//                    navController.navigate(route = "mealImage")
+                    navController.navigate(route = "mealImage/${Uri.encode(it)}")
                 }
             )
         }
 
-//        composable(route = "mealImage")
-//        {
-//            val mealDetailsViewModel: MealDetailsViewModel = hiltViewModel()
-//            mealDetailsViewModel.mealState.value.meal?.strMealThumb?.let { it1 -> MealImageScreen(it1) }
-//        }
+        composable(route = "mealImage/{image_url}", arguments = listOf(
+            navArgument(name = "image_url"){
+                type = NavType.StringType
+            }
+        ))
+        {
+            val fullImageViewModel: FullImageViewModel = hiltViewModel()
+            fullImageViewModel.imageUrl?.let { it1 -> FullImageScreen(it1) }
+        }
     }
 }
 
