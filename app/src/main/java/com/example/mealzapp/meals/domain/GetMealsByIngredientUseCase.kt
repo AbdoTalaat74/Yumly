@@ -7,7 +7,7 @@ class GetMealsByIngredientUseCase @Inject constructor(
     private val mealsRepository: MealsRepository
 ) {
 
-    suspend fun getMealsByIngredient(ingredient: String, offset: Int, limit: Int) =
-        mealsRepository.getMealsByIngredient(ingredient, offset, limit)
+    suspend fun getMealsByIngredient(ingredient: String) =
+        mealsRepository.getMealsByIngredient(ingredient)
 
 }

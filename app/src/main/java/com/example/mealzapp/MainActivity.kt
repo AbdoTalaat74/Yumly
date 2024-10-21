@@ -80,10 +80,17 @@ fun MealsAroundApp(modifier: Modifier) {
             searchType = "category"
             MainScreen(
                 state = mainViewModel.state.value,
+                randomMealsState = mainViewModel.randomMealsState.value,
                 onClickItem = { categoryName ->
 
                     navController.navigate("meals/$categoryName/$searchType")
 
+                },
+                onMealClick = {
+                    navController.navigate(route = "meal/${it.idMeal}")
+                },
+                onRefresh = {
+                    mainViewModel.refreshRandomMeals()
                 }
             )
         }

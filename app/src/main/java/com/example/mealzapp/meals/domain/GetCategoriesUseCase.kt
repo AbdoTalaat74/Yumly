@@ -1,7 +1,6 @@
 package com.example.mealzapp.meals.domain
 
 import com.example.mealzapp.meals.data.MealsRepository
-import com.example.mealzapp.meals.data.local.Category
 import javax.inject.Inject
 
 class GetCategoriesUseCase @Inject constructor(

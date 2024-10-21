@@ -10,44 +10,45 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import com.example.mealzapp.meals.data.local.Meal
-
 @Composable
-fun MealCard(meal: Meal, onClick:(Meal)->Unit) {
+fun MealCard(meal: Meal, onClick: (Meal) -> Unit) {
+
     Card(
         shape = RoundedCornerShape(16.dp),
         elevation = CardDefaults.cardElevation(4.dp),
         modifier = Modifier
+            .width(200.dp)
             .padding(8.dp)
             .clickable { onClick(meal) }
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            verticalArrangement = Arrangement.Center,
+            modifier = Modifier.fillMaxWidth()
         ) {
             Image(
                 painter = rememberAsyncImagePainter(meal.strMealThumb),
                 contentDescription = meal.strMeal,
-                contentScale = ContentScale.FillBounds,
+                contentScale = ContentScale.Crop,  // Ensures proper cropping
                 modifier = Modifier
-                    .height(150.dp)
                     .fillMaxWidth()
-
-
+                    .height(150.dp)
             )
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = meal.strMeal!!,
-                fontSize = 20.sp,
+                text = meal.strMeal ?: "",
+                fontSize = 16.sp,
                 textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp)
             )
             Spacer(modifier = Modifier.height(8.dp))
         }
     }
 }
+
