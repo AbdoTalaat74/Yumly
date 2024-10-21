@@ -8,6 +8,6 @@ class GetMealsByAreaUseCase @Inject constructor(
     private val repository: MealsRepository,
 ) {
 
-    suspend fun getMealsByArea(categoryName: String) =
-        repository.getMealsByArea(categoryName)
+    suspend fun getMealsByArea(categoryName: String,offset:Int,limit:Int) =
+        repository.getMealsByArea(categoryName,offset,limit)
 }

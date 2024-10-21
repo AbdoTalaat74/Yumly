@@ -1,6 +1,5 @@
 package com.example.mealzapp.meals.presentation.mealsScreen
 
-import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -9,6 +8,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.mealzapp.meals.data.local.Meal
 import com.example.mealzapp.meals.domain.GetMealsByAreaUseCase
 import com.example.mealzapp.meals.domain.GetMealsByCategoryUseCase
 import com.example.mealzapp.meals.domain.GetMealsByIngredientUseCase
@@ -24,76 +24,93 @@ class MealsViewModel @Inject constructor(
     private val getMealsByAreaUseCase: GetMealsByAreaUseCase,
     private val getMealsByIngredientUseCase: GetMealsByIngredientUseCase
 ) : ViewModel() {
-    private var filterBy: String
+    private var filterKey: String
+    private var filterType:String
     private var _mealsState by mutableStateOf(
         MealsState(
             meals = emptyList(),
-            isLoading = true,
+            isLoading = false,
         )
     )
     val mealsState: State<MealsState>
         get() = derivedStateOf { _mealsState }
-
+    private var currentPage = 0
+    private var endReached = false
+    private val pageSize = 8
+    private var filterKeyArgument: String? = savedStateHandle.get<String>("filter_key")
+    private var filterTypeArgument: String? = savedStateHandle.get<String>("search_type")
 
     init {
-
-        val filterKeyArgument: String? = savedStateHandle.get<String>("filter_key")
-        val searchTypeArgument: String? = savedStateHandle.get<String>("search_type")
-
-        filterBy = filterKeyArgument ?: ""
-        Log.e("MealsViewModelArgument", filterBy)
-        when (searchTypeArgument) {
-            "category" -> getMealsByCategoryName(filterBy)
-            "area" -> getMealsByAreaName(filterBy)
-            "ingredient" -> getMealsByIngredient(filterBy)
-        }
-
-
+        filterKey = filterKeyArgument ?: ""
+        filterType = filterTypeArgument?:""
+        filterMealsByType(filterType,filterKey)
     }
 
 
     private fun getMealsByCategoryName(categoryName: String) {
-
+        if (_mealsState.isLoading || endReached) return
+        _mealsState = _mealsState.copy(
+            isLoading = true
+        )
         viewModelScope.launch(Dispatchers.IO) {
             val newMeals = getMealsByCategoryUseCase.getMealsByCategory(
                 categoryName,
+                currentPage * pageSize,
+                pageSize
             )
-            if (newMeals.isNotEmpty()) {
-                _mealsState = _mealsState.copy(
-                    meals = mealsState.value.meals + newMeals,
-                    isLoading = false
-                )
-            }
+            updateMealStateWithNewMeals(newMeals)
         }
     }
-
     private fun getMealsByAreaName(areaName: String) {
+        if (_mealsState.isLoading || endReached) return
+        _mealsState = _mealsState.copy(
+            isLoading = true
+        )
         viewModelScope.launch(Dispatchers.IO) {
             val newMeals = getMealsByAreaUseCase.getMealsByArea(
                 areaName,
+                currentPage * pageSize,
+                pageSize
             )
-            if (newMeals.isNotEmpty()) {
-                _mealsState = _mealsState.copy(
-                    meals = mealsState.value.meals + newMeals,
-                    isLoading = false
-                )
-            }
+            updateMealStateWithNewMeals(newMeals)
         }
     }
-
     private fun getMealsByIngredient(ingredient: String) {
+        if (_mealsState.isLoading || endReached) return
+        _mealsState = _mealsState.copy(
+            isLoading = true
+        )
         viewModelScope.launch(Dispatchers.IO) {
             val newMeals = getMealsByIngredientUseCase.getMealsByIngredient(
-                ingredient
+                ingredient,
+                currentPage * pageSize,
+                pageSize
             )
-            if (newMeals.isNotEmpty()) {
-                _mealsState = _mealsState.copy(
-                    meals = mealsState.value.meals + newMeals,
-                    isLoading = false
-                )
-            }
+            updateMealStateWithNewMeals(newMeals)
+        }
+    }
+    private fun updateMealStateWithNewMeals(newMeals: List<Meal>) {
+        if (newMeals.isNotEmpty()) {
+            _mealsState = _mealsState.copy(
+                meals = mealsState.value.meals + newMeals,
+                isLoading = false
+            )
+            currentPage++
+        } else {
+            endReached = true
+        }
+        _mealsState = _mealsState.copy(
+            isLoading = false
+        )
+    }
+    fun loadMeals() {
+        filterMealsByType(filterType,filterKey)
+    }
+    private fun filterMealsByType(filterType: String, filterKey: String) {
+        when (filterType) {
+            "category" -> getMealsByCategoryName(filterKey)
+            "area" -> getMealsByAreaName(filterKey)
+            "ingredient" -> getMealsByIngredient(filterKey)
         }
     }
 }
-
-

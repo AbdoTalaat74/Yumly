@@ -10,12 +10,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.mealzapp.composables.MealCard
 import com.example.mealzapp.meals.data.local.Meal
 import com.example.mealzapp.ui.theme.PurpleGrey80
 @Composable
 fun MealsScreen(state: MealsState, onItemClick: (Meal) -> Unit) {
-
+    val mealsViewModel:MealsViewModel = hiltViewModel()
     Box(modifier = Modifier.fillMaxSize()) {
         LazyVerticalStaggeredGrid(
             columns = StaggeredGridCells.Fixed(2),
@@ -30,6 +31,9 @@ fun MealsScreen(state: MealsState, onItemClick: (Meal) -> Unit) {
                         onItemClick(it)
                     }
                 )
+                if (index == state.meals.size - 1) {
+                    mealsViewModel.loadMeals()
+                }
             }
         }
 
