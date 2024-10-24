@@ -86,6 +86,8 @@ dependencies {
     implementation("com.google.accompanist:accompanist-pager:0.28.0")
     implementation("com.google.accompanist:accompanist-pager-indicators:0.28.0")
     implementation("com.google.accompanist:accompanist-swiperefresh:0.28.0")
+    implementation("me.saket.telephoto:zoomable:0.13.0")
+
 
 
 

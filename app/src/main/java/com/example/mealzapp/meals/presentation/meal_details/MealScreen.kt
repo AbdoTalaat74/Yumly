@@ -14,13 +14,21 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -43,106 +51,131 @@ import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalPagerApi::class)
+@OptIn(ExperimentalPagerApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun MealScreen(
     mealState: MealState,
     onCategoryClick: (String) -> Unit,
     onAreaClick: (String) -> Unit,
     onIngredientClick: (String) -> Unit,
-    onImageClick:(String)->Unit
+    onImageClick: (String) -> Unit,
+    onNavigateUpClick:()-> Unit
 ) {
     val pageState = rememberPagerState()
     val scope = rememberCoroutineScope()
     val tabTitles = listOf("Ingredients", "Instructions", "More")
-    Column(modifier = Modifier.fillMaxSize()) {
-        Image(
-            painter = rememberAsyncImagePainter(mealState.meal?.strMealThumb),
-            contentDescription = "",
+
+    Scaffold(modifier = Modifier.fillMaxSize(), topBar =
+    {
+        TopAppBar(
+            title = { Text(mealState.meal?.strMeal?:"Meals App") },
+            navigationIcon = {
+                IconButton(onClick = {onNavigateUpClick()}) {
+                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                }
+            },
             modifier = Modifier
                 .fillMaxWidth()
-                .fillMaxHeight(0.25f)
-                .clickable {
-                    mealState.meal?.strMealThumb?.let { onImageClick(it) }
-                },
-            contentScale = ContentScale.Crop,
+                .shadow(elevation = 4.dp)
         )
-        Spacer(modifier = Modifier.height(16.dp))
-        Row(
+    }
+    ) { paddingValues ->
+
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 8.dp)
-        ) {
-
-            mealState.meal?.strCategory?.let { categoryName ->
-                InfoRow(
-                    iconRes = painterResource(R.drawable.category),
-                    text = categoryName,
-                    onClick = { onCategoryClick(categoryName) },
-                    categoryName = categoryName
+                .fillMaxSize()
+                .padding(
+                    top = paddingValues.calculateTopPadding(),
+                    bottom = paddingValues.calculateBottomPadding()
                 )
-            }
-
-            val mealArea = mealState.meal?.strArea ?: "Unknown"
-            AreaCard(area = mealArea) {
-                onAreaClick(it)
-            }
-        }
-
-        Spacer(modifier = Modifier.height(24.dp))
-        ScrollableTabRow(
-            selectedTabIndex = pageState.currentPage,
-            containerColor = Color.Unspecified,
-            contentColor = Orange
         ) {
-            tabTitles.forEachIndexed { index, title ->
-
-                Tab(
-                    selectedContentColor = Orange,
-                    unselectedContentColor = Color.Gray,
-                    modifier = Modifier.fillMaxWidth(),
-                    text = {
-                        Text(
-                            fontSize = 18.sp,
-                            modifier = Modifier.fillMaxWidth(),
-                            text = title
-                        )
+            Image(
+                painter = rememberAsyncImagePainter(mealState.meal?.strMealThumb),
+                contentDescription = "",
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight(0.25f)
+                    .clickable {
+                        mealState.meal?.strMealThumb?.let { onImageClick(it) }
                     },
-                    selected = pageState.currentPage == index,
-                    onClick = {
-                        scope.launch {
-                            pageState.scrollToPage(index)
-                        }
-                    }
-                )
-            }
-        }
+                contentScale = ContentScale.Crop,
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 8.dp)
+            ) {
 
-        HorizontalPager(
-            modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight(),
-            count = tabTitles.size,
-            state = pageState,
-        ) { page ->
-            when (page) {
-                0 -> mealState.meal?.let { meal ->
-                    IngredientsSection(meal, onIngredientClick = { ingredient ->
-                        onIngredientClick(ingredient)
-                    })
+                mealState.meal?.strCategory?.let { categoryName ->
+                    InfoRow(
+                        iconRes = painterResource(R.drawable.category),
+                        text = categoryName,
+                        onClick = { onCategoryClick(categoryName) },
+                        categoryName = categoryName
+                    )
                 }
 
-                1 -> mealState.meal?.strInstructions?.let { InstructionsSection(it) }
-                2 -> mealState.meal?.let {
-                    MoreSection(
-                        it.strSource ?: "https://www.google.com",
-                        it.strYoutube ?: "https://www.youtube.com/"
+                val mealArea = mealState.meal?.strArea ?: "Unknown"
+                AreaCard(area = mealArea) {
+                    onAreaClick(it)
+                }
+            }
+
+            Spacer(modifier = Modifier.height(24.dp))
+            ScrollableTabRow(
+                selectedTabIndex = pageState.currentPage,
+                containerColor = Color.Unspecified,
+                contentColor = Orange
+            ) {
+                tabTitles.forEachIndexed { index, title ->
+
+                    Tab(
+                        selectedContentColor = Orange,
+                        unselectedContentColor = Color.Gray,
+                        modifier = Modifier.fillMaxWidth(),
+                        text = {
+                            Text(
+                                fontSize = 18.sp,
+                                modifier = Modifier.fillMaxWidth(),
+                                text = title
+                            )
+                        },
+                        selected = pageState.currentPage == index,
+                        onClick = {
+                            scope.launch {
+                                pageState.scrollToPage(index)
+                            }
+                        }
                     )
+                }
+            }
+
+            HorizontalPager(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight(),
+                count = tabTitles.size,
+                state = pageState,
+            ) { page ->
+                when (page) {
+                    0 -> mealState.meal?.let { meal ->
+                        IngredientsSection(meal, onIngredientClick = { ingredient ->
+                            onIngredientClick(ingredient)
+                        })
+                    }
+
+                    1 -> mealState.meal?.strInstructions?.let { InstructionsSection(it) }
+                    2 -> mealState.meal?.let {
+                        MoreSection(
+                            it.strSource ?: "https://www.google.com",
+                            it.strYoutube ?: "https://www.youtube.com/"
+                        )
+                    }
                 }
             }
         }
     }
-
 
 
 }

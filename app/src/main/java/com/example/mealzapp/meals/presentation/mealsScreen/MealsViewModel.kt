@@ -39,11 +39,12 @@ class MealsViewModel @Inject constructor(
     private val pageSize = 8
     private var filterKeyArgument: String? = savedStateHandle.get<String>("filter_key")
     private var filterTypeArgument: String? = savedStateHandle.get<String>("search_type")
-
+    var topAppBarTitle:String?
     init {
         filterKey = filterKeyArgument ?: ""
         filterType = filterTypeArgument?:""
         filterMealsByType(filterType,filterKey)
+        topAppBarTitle = filterKeyArgument ?:"Meals"
     }
 
 

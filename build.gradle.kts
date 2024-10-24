@@ -5,3 +5,10 @@ plugins {
     id("com.google.dagger.hilt.android") version "2.51.1" apply false
 
 }
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()  // Add this line to include Maven Central as a repository
+    }
+}

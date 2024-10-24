@@ -7,17 +7,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -47,22 +38,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             MealsAppTheme(darkTheme = isSystemInDarkTheme()) {
 
-                Scaffold(modifier = Modifier.fillMaxSize(), topBar = {
-                    TopAppBar(
-                        title = { Text(text = "Meals App") },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .shadow(elevation = 4.dp)
-                    )
-                }) { paddingValues ->
-                    MealsAroundApp(
-                        modifier = Modifier.padding(
-                            top = paddingValues.calculateTopPadding(),
-                            bottom = paddingValues.calculateBottomPadding()
-                        )
-                    )
-                }
-
+                MealsAroundApp()
 
             }
         }
@@ -70,12 +46,12 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun MealsAroundApp(modifier: Modifier) {
+fun MealsAroundApp() {
     lateinit var searchType: String
     val navController = rememberNavController()
     val mainViewModel: MainViewModel = hiltViewModel()
 
-    NavHost(navController = navController, startDestination = "main", modifier = modifier) {
+    NavHost(navController = navController, startDestination = "main") {
         composable(route = "main") {
             searchType = "category"
             MainScreen(
@@ -105,7 +81,8 @@ fun MealsAroundApp(modifier: Modifier) {
                 onItemClick = {
                     navController.navigate(route = "meal/${it.idMeal}")
                     Log.i("MealIdNavigation", it.idMeal.toString())
-                }
+                },
+                onNavigateUpClick = {navController.navigate(route = "main/")}
             )
         }
 
@@ -133,7 +110,11 @@ fun MealsAroundApp(modifier: Modifier) {
                 },
                 onImageClick = {
                     navController.navigate(route = "mealImage/${Uri.encode(it)}")
+                },
+                onNavigateUpClick = {
+                    navController.navigateUp()
                 }
+
             )
         }
 
