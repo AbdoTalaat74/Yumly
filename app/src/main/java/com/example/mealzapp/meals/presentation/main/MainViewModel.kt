@@ -10,7 +10,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.mealzapp.meals.data.local.Meal
 import com.example.mealzapp.meals.domain.GetCategoriesUseCase
+import com.example.mealzapp.meals.domain.GetIngredientsUseCase
 import com.example.mealzapp.meals.domain.GetRandomMealUseCase
+import com.example.mealzapp.meals.presentation.mealsScreen.MealsState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -20,17 +22,19 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val getCategoriesUseCase: GetCategoriesUseCase,
-    private val getRandomMealUseCase: GetRandomMealUseCase
+    private val getRandomMealUseCase: GetRandomMealUseCase,
+    private val getIngredientsUseCase: GetIngredientsUseCase
 ) : ViewModel() {
 
-    private var _state by mutableStateOf(
+
+    private var _categoryState by mutableStateOf(
         CategoryState(
             categories = emptyList(), isLoading = true
         )
     )
 
-    val state: State<CategoryState>
-        get() = derivedStateOf { _state }
+    val categoryState: State<CategoryState>
+        get() = derivedStateOf { _categoryState }
 
     private var _randomMealsState by mutableStateOf(
         RandomMealsState(
@@ -43,16 +47,27 @@ class MainViewModel @Inject constructor(
         get() = derivedStateOf { _randomMealsState }
 
 
+    private var _ingredientsState by mutableStateOf(
+        MealsState(
+            meals = emptyList(),
+            isLoading = false
+        )
+    )
+
+    val ingredientsState: State<MealsState>
+        get() = derivedStateOf { _ingredientsState }
+
     init {
         getCategories()
         getRandomMeals()
+        getIngredients()
     }
 
 
     private fun getCategories() {
         viewModelScope.launch(Dispatchers.IO) {
             val receivedCategories = getCategoriesUseCase()
-            _state = _state.copy(
+            _categoryState = _categoryState.copy(
                 categories = receivedCategories,
                 isLoading = false
             )
@@ -80,5 +95,23 @@ class MainViewModel @Inject constructor(
 
     fun refreshRandomMeals() {
         getRandomMeals()
+    }
+
+
+    private fun getIngredients() {
+        _ingredientsState = _ingredientsState.copy(
+            isLoading = true
+        )
+        viewModelScope.launch(Dispatchers.IO) {
+            val ingredients = getIngredientsUseCase.getIngredients()
+            if ((ingredients.isNotEmpty())) {
+                _ingredientsState = _ingredientsState.copy(
+                    meals = _ingredientsState.meals + ingredients,
+                    isLoading = false
+                )
+            }
+        }
+
+
     }
 }

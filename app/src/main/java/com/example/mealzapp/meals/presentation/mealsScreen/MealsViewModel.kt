@@ -93,7 +93,7 @@ class MealsViewModel @Inject constructor(
     private fun updateMealStateWithNewMeals(newMeals: List<Meal>) {
         if (newMeals.isNotEmpty()) {
             _mealsState = _mealsState.copy(
-                meals = mealsState.value.meals + newMeals,
+                meals = _mealsState.meals + newMeals,
                 isLoading = false
             )
             currentPage++

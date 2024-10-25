@@ -53,17 +53,21 @@ fun MealsAroundApp() {
 
     NavHost(navController = navController, startDestination = "main") {
         composable(route = "main") {
-            searchType = "category"
             MainScreen(
-                state = mainViewModel.state.value,
+                state = mainViewModel.categoryState.value,
                 randomMealsState = mainViewModel.randomMealsState.value,
-                onClickItem = { categoryName ->
-
+                ingredientsState = mainViewModel.ingredientsState.value,
+                onIngredientClick = {ingredientName ->
+                    searchType = "ingredient"
+                    navController.navigate(route = "meals/$ingredientName/$searchType")
+                },
+                onCategoryClick = { categoryName ->
+                    searchType = "category"
                     navController.navigate("meals/$categoryName/$searchType")
 
                 },
-                onMealClick = {
-                    navController.navigate(route = "meal/${it.idMeal}")
+                onMealClick = { meal ->
+                    navController.navigate(route = "meal/${meal.idMeal}")
                 },
                 onRefresh = {
                     mainViewModel.refreshRandomMeals()
@@ -82,7 +86,7 @@ fun MealsAroundApp() {
                     navController.navigate(route = "meal/${it.idMeal}")
                     Log.i("MealIdNavigation", it.idMeal.toString())
                 },
-                onNavigateUpClick = {navController.navigate(route = "main/")}
+                onNavigateUpClick = {navController.navigate(route = "main")}
             )
         }
 

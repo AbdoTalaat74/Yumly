@@ -12,22 +12,29 @@ class MealsRepository @Inject constructor(
 
     suspend fun getCategories() = apiService.getCategories().categories
 
-    suspend fun getMealsByCategory(categoryName:String,offset: Int,limit:Int) :List<Meal> {
-       val allMeals = apiService.getMealsByCategory(categoryName).meals
+    suspend fun getMealsByCategory(categoryName: String, offset: Int, limit: Int): List<Meal> {
+        val allMeals = apiService.getMealsByCategory(categoryName).meals
         return allMeals.drop(offset).take(limit)
     }
 
-    suspend fun getMealDetails(mealId:Int) = apiService.getMealDetails(mealId)
+    suspend fun getMealDetails(mealId: Int) = apiService.getMealDetails(mealId)
 
-    suspend fun getMealsByArea(areaName:String,offset:Int,limit:Int) :List<Meal>{
+    suspend fun getMealsByArea(areaName: String, offset: Int, limit: Int): List<Meal> {
         val allMeals = apiService.getMealsByArea(areaName).meals
         return allMeals.drop(offset).take(limit)
     }
 
-    suspend fun getMealsByIngredient(ingredient:String,offset:Int,limit:Int) : List<Meal> {
+    suspend fun getMealsByIngredient(ingredient: String, offset: Int, limit: Int): List<Meal> {
         val allMeals = apiService.getMealsByIngredient(ingredient).meals
         return allMeals.drop(offset).take(limit)
     }
 
     suspend fun getRandomMeal() = apiService.getRandomMeal().meals
+
+    suspend fun getIngredients() =
+        apiService.getIngredients().meals
+
+
+
+
 }

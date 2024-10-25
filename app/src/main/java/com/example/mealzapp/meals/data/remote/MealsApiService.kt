@@ -30,7 +30,9 @@ interface MealsApiService {
 
     @GET("random.php")
     suspend fun getRandomMeal(): MealsResponse
+
+    @GET("list.php?i=list")
+    suspend fun getIngredients(): MealsResponse
 }
 
 
-//random.php
