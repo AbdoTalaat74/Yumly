@@ -34,7 +34,7 @@ class MealsRepository @Inject constructor(
     suspend fun getIngredients() =
         apiService.getIngredients().meals
 
-
+    suspend fun getCountries() = apiService.getCountries().meals
 
 
 }

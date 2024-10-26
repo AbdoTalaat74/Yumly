@@ -57,6 +57,7 @@ fun MealsAroundApp() {
                 state = mainViewModel.categoryState.value,
                 randomMealsState = mainViewModel.randomMealsState.value,
                 ingredientsState = mainViewModel.ingredientsState.value,
+                countriesState = mainViewModel.countriesState.value,
                 onIngredientClick = {ingredientName ->
                     searchType = "ingredient"
                     navController.navigate(route = "meals/$ingredientName/$searchType")
@@ -71,6 +72,10 @@ fun MealsAroundApp() {
                 },
                 onRefresh = {
                     mainViewModel.refreshRandomMeals()
+                },
+                onCountryClick = {countryName ->
+                    searchType = "area"
+                    navController.navigate(route = "meals/$countryName/$searchType")
                 }
             )
         }

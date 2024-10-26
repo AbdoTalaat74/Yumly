@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.mealzapp.meals.data.local.Meal
 import com.example.mealzapp.meals.domain.GetCategoriesUseCase
+import com.example.mealzapp.meals.domain.GetCountriesUseCase
 import com.example.mealzapp.meals.domain.GetIngredientsUseCase
 import com.example.mealzapp.meals.domain.GetRandomMealUseCase
 import com.example.mealzapp.meals.presentation.mealsScreen.MealsState
@@ -23,7 +24,8 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(
     private val getCategoriesUseCase: GetCategoriesUseCase,
     private val getRandomMealUseCase: GetRandomMealUseCase,
-    private val getIngredientsUseCase: GetIngredientsUseCase
+    private val getIngredientsUseCase: GetIngredientsUseCase,
+    private val getCountriesUseCase: GetCountriesUseCase
 ) : ViewModel() {
 
 
@@ -57,10 +59,21 @@ class MainViewModel @Inject constructor(
     val ingredientsState: State<MealsState>
         get() = derivedStateOf { _ingredientsState }
 
+
+    private var _countriesState by mutableStateOf(
+        MealsState(
+            meals = emptyList(),
+            isLoading = false
+        )
+    )
+    val countriesState: State<MealsState>
+        get() = derivedStateOf { _countriesState }
+
     init {
         getCategories()
         getRandomMeals()
         getIngredients()
+        getCountries()
     }
 
 
@@ -104,14 +117,27 @@ class MainViewModel @Inject constructor(
         )
         viewModelScope.launch(Dispatchers.IO) {
             val ingredients = getIngredientsUseCase.getIngredients()
-            if ((ingredients.isNotEmpty())) {
+            if (ingredients.isNotEmpty()) {
                 _ingredientsState = _ingredientsState.copy(
                     meals = _ingredientsState.meals + ingredients,
                     isLoading = false
                 )
             }
         }
+    }
 
-
+    private fun getCountries() {
+        _countriesState = _countriesState.copy(
+            isLoading = true
+        )
+        viewModelScope.launch(Dispatchers.IO) {
+            val countries = getCountriesUseCase.getCountries()
+            if (countries.isNotEmpty()) {
+                _countriesState = _countriesState.copy(
+                    meals = _countriesState.meals + countries,
+                    isLoading = false
+                )
+            }
+        }
     }
 }

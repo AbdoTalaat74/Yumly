@@ -23,7 +23,7 @@ fun CategoryCard(category: Category,onClick:(Category)->Unit) {
         shape = RoundedCornerShape(8.dp),
         elevation = CardDefaults.cardElevation(4.dp),
         modifier = Modifier
-            .padding(8.dp)
+            .padding(horizontal = 4.dp)
             .clickable { onClick(category) }
     ) {
         Column(

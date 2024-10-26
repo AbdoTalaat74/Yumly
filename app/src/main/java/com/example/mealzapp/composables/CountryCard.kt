@@ -1,10 +1,14 @@
 package com.example.mealzapp.composables
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
@@ -17,41 +21,45 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import com.example.mealzapp.meals.data.local.Meal
-@Composable
-fun IngredientCard(ingredient: Meal, onClick: (Meal) -> Unit) {
+import com.example.mealzapp.meals.domain.getAria.getAreaModel
 
+@Composable
+fun CountryCard(
+    meal: Meal,
+    onClick: (countryName: String) -> Unit
+) {
     Card(
-        shape = RoundedCornerShape(16.dp),
         elevation = CardDefaults.cardElevation(4.dp),
         modifier = Modifier
-            .width(200.dp)
+            .size(100.dp)
             .padding(horizontal = 4.dp)
-            .clickable { onClick(ingredient) }
+            .padding(bottom = 16.dp)
+            .clickable { meal.strArea?.let { onClick(it) } }
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
             modifier = Modifier.fillMaxWidth()
         ) {
-            Log.e("IngredientCardImage",ingredient.strIngredient?:"Empty")
-            val painter = "https://www.themealdb.com/images/ingredients/${ingredient.strIngredient}.png"
-            Image(
-                painter = rememberAsyncImagePainter(painter),
 
-                contentDescription = ingredient.strIngredient,
+            Image(
+                painter = rememberAsyncImagePainter(meal.strArea?.let { getAreaModel(it) }),
+                contentDescription = meal.strArea,
                 contentScale = ContentScale.Crop,  // Ensures proper cropping
                 modifier = Modifier
-                    .height(150.dp)
-                    .width(150.dp)
+                    .fillMaxWidth()
+                    .size(50.dp)
+                    .padding(top = 8.dp, start = 8.dp, end = 8.dp)
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = ingredient.strIngredient ?: "",
+                text = meal.strArea ?: "",
                 fontSize = 16.sp,
                 textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 8.dp)
             )
-            Spacer(modifier = Modifier.height(8.dp))
         }
     }
 }
