@@ -16,11 +16,14 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -57,6 +60,7 @@ fun MainScreen(
     onCategoryClick: (categoryName: String) -> Unit,
     onMealClick: (Meal) -> Unit,
     onRefresh: () -> Unit,
+    onSearchClick:()->Unit
 
     ) {
     val isRefreshing = randomMealsState.refreshState
@@ -64,6 +68,11 @@ fun MainScreen(
     {
         TopAppBar(
             title = { Text(text = "Meals App") },
+            actions = {
+                IconButton(onClick ={onSearchClick()} ) {
+                    Icon(Icons.Default.Search, contentDescription = "Search")
+                }
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .shadow(elevation = 4.dp)
@@ -157,7 +166,6 @@ fun MainScreen(
                             )
                         }
                     }
-                    Spacer(modifier = Modifier.height(16.dp))
                     Text(
                         modifier = Modifier.padding(start = 4.dp),
                         text = stringResource(R.string.categories),
@@ -210,7 +218,7 @@ fun MainScreen(
                         text = stringResource(R.string.countries),
                         style = TextStyle(fontSize = 24.sp, fontWeight = FontWeight.SemiBold),
                     )
-
+                    Spacer(modifier = Modifier.height(8.dp))
                     LazyRow(
                         modifier = Modifier.fillMaxWidth()
                     ) {

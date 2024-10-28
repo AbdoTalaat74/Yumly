@@ -35,6 +35,6 @@ class MealsRepository @Inject constructor(
         apiService.getIngredients().meals
 
     suspend fun getCountries() = apiService.getCountries().meals
-
+    suspend fun searchMeal(query:String) = apiService.searchMeal(query).meals
 
 }

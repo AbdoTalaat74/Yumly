@@ -39,12 +39,13 @@ class MealsViewModel @Inject constructor(
     private val pageSize = 8
     private var filterKeyArgument: String? = savedStateHandle.get<String>("filter_key")
     private var filterTypeArgument: String? = savedStateHandle.get<String>("search_type")
-    var topAppBarTitle:String?
+    var topAppBarTitle:String? = null
+
     init {
         filterKey = filterKeyArgument ?: ""
         filterType = filterTypeArgument?:""
         filterMealsByType(filterType,filterKey)
-        topAppBarTitle = filterKeyArgument ?:"Meals"
+
     }
 
 
@@ -109,9 +110,18 @@ class MealsViewModel @Inject constructor(
     }
     private fun filterMealsByType(filterType: String, filterKey: String) {
         when (filterType) {
-            "category" -> getMealsByCategoryName(filterKey)
-            "area" -> getMealsByAreaName(filterKey)
-            "ingredient" -> getMealsByIngredient(filterKey)
+            "category" -> {
+                getMealsByCategoryName(filterKey)
+                topAppBarTitle = "$filterKeyArgument Category"
+            }
+            "area" ->{
+                getMealsByAreaName(filterKey)
+                topAppBarTitle = "$filterKeyArgument Meals"
+            }
+            "ingredient" -> {
+                getMealsByIngredient(filterKey)
+                topAppBarTitle = "Meals containing $filterKeyArgument"
+            }
         }
     }
 }

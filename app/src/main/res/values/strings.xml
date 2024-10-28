@@ -3,5 +3,5 @@
     <string name="categories">Categories</string>
     <string name="random_meals">Random Meals</string>
     <string name="ingredients">Ingredients</string>
-    <string name="countries">Countries\n</string>
+    <string name="countries">Countries</string>
 </resources>

@@ -35,6 +35,11 @@ interface MealsApiService {
 
     @GET("list.php?a=list")
     suspend fun getCountries(): MealsResponse
+
+    @GET("search.php")
+    suspend fun searchMeal(
+        @Query("s") mealName:String
+    ): MealsResponse
 }
 
 
