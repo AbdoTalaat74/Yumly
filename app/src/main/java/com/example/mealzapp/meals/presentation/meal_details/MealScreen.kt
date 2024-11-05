@@ -1,10 +1,13 @@
 package com.example.mealzapp.meals.presentation.meal_details
 
+import android.content.ClipData.Item
 import android.content.Intent
 import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -13,6 +16,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -22,6 +26,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -59,7 +64,7 @@ fun MealScreen(
     onAreaClick: (String) -> Unit,
     onIngredientClick: (String) -> Unit,
     onImageClick: (String) -> Unit,
-    onNavigateUpClick:()-> Unit
+    onNavigateUpClick: () -> Unit
 ) {
     val pageState = rememberPagerState()
     val scope = rememberCoroutineScope()
@@ -68,9 +73,9 @@ fun MealScreen(
     Scaffold(modifier = Modifier.fillMaxSize(), topBar =
     {
         TopAppBar(
-            title = { Text(mealState.meal?.strMeal?:"Meals App") },
+            title = { Text(mealState.meal?.strMeal ?: "Meals App") },
             navigationIcon = {
-                IconButton(onClick = {onNavigateUpClick()}) {
+                IconButton(onClick = { onNavigateUpClick() }) {
                     Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                 }
             },
@@ -84,10 +89,8 @@ fun MealScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(
-                    top = paddingValues.calculateTopPadding(),
-                    bottom = paddingValues.calculateBottomPadding()
-                )
+                .padding(paddingValues), horizontalAlignment = Alignment.CenterHorizontally
+
         ) {
             Image(
                 painter = rememberAsyncImagePainter(mealState.meal?.strMealThumb),
@@ -123,21 +126,21 @@ fun MealScreen(
             }
 
             Spacer(modifier = Modifier.height(24.dp))
-            ScrollableTabRow(
+            TabRow(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 8.dp),
                 selectedTabIndex = pageState.currentPage,
                 containerColor = Color.Unspecified,
                 contentColor = Orange
             ) {
                 tabTitles.forEachIndexed { index, title ->
-
                     Tab(
                         selectedContentColor = Orange,
                         unselectedContentColor = Color.Gray,
-                        modifier = Modifier.fillMaxWidth(),
                         text = {
                             Text(
-                                fontSize = 18.sp,
-                                modifier = Modifier.fillMaxWidth(),
+                                fontSize = 16.sp,
                                 text = title
                             )
                         },
@@ -148,9 +151,10 @@ fun MealScreen(
                             }
                         }
                     )
-                }
-            }
 
+                }
+
+            }
             HorizontalPager(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -225,31 +229,35 @@ fun InstructionsSection(instructions: String) {
 fun MoreSection(resourceLink: String, youtubeLink: String) {
     val context = LocalContext.current
 
-    Column(
+    LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.Start
     ) {
-        MoreSectionItem(
-            modifier = Modifier.clickable {
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(resourceLink))
-                context.startActivity(intent)
-            }, text = "Resource",
-            iconRes = R.drawable.baseline_insert_link_24
-        )
+        item {
+            MoreSectionItem(
+                modifier = Modifier.clickable {
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(resourceLink))
+                    context.startActivity(intent)
+                }, text = "Resource",
+                iconRes = R.drawable.baseline_insert_link_24
+            )
+        }
 
-        Spacer(modifier = Modifier.height(16.dp))
+        item{
+            Spacer(modifier = Modifier.height(16.dp))
+            MoreSectionItem(
+                modifier = Modifier.clickable {
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(youtubeLink))
+                    context.startActivity(intent)
+                },
+                text = "Youtube Link",
+                iconRes = R.drawable.basline_youtub_icon,
+            )
+        }
 
-        MoreSectionItem(
-            modifier = Modifier.clickable {
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(youtubeLink))
-                context.startActivity(intent)
-            },
-            text = "Youtube Link",
-            iconRes = R.drawable.basline_youtub_icon,
-        )
 
     }
 }
