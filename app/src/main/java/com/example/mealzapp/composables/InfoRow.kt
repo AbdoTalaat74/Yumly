@@ -16,28 +16,28 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.example.mealzapp.meals.data.local.Category
 import com.example.mealzapp.ui.theme.Orange
+import com.example.mealzapp.ui.theme.dimens
 
 @Composable
 fun InfoRow(iconRes: Painter, text: String, onClick:(String)->Unit,categoryName: String) {
     Card(
-        shape = RoundedCornerShape(8.dp),
-        elevation = CardDefaults.cardElevation(4.dp),
+        shape = RoundedCornerShape(MaterialTheme.dimens.small1),
+        elevation = CardDefaults.cardElevation(MaterialTheme.dimens.small2),
         modifier = Modifier
-            .padding(8.dp)
+            .padding(MaterialTheme.dimens.small1)
             .clickable { onClick(categoryName) }
 
 
     ){
         Row(
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
+            modifier = Modifier.padding(
+                horizontal = MaterialTheme.dimens.small1,
+                vertical = MaterialTheme.dimens.small1
+            ),
             verticalAlignment = Alignment.CenterVertically
 
         ) {
@@ -46,19 +46,16 @@ fun InfoRow(iconRes: Painter, text: String, onClick:(String)->Unit,categoryName:
                 contentDescription = null,
                 tint = Orange,
                 modifier = Modifier
-                    .size(32.dp)
-                    .padding(end = 8.dp)
+                    .size(MaterialTheme.dimens.medium3) // Adjusted for image size
             )
 
-            Spacer(modifier = Modifier.width(16.dp))
+            Spacer(modifier = Modifier.width(MaterialTheme.dimens.small1))
 
                 Text(
                     text = text,
-                    color = Color.Black,
                     textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.SemiBold,
-                    fontSize = 18.sp
 
                 )
 
