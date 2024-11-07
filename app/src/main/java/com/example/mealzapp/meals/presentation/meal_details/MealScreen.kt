@@ -35,7 +35,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
@@ -231,15 +230,12 @@ fun InstructionsSection(instructions: String) {
                     vertical = MaterialTheme.dimens.small1
                 ),   
                 text = instructions,
-                style = TextStyle(
-                    fontSize = MaterialTheme.typography.bodyMedium.fontSize,   
-                    fontWeight = FontWeight.Medium
-                )
+                style = MaterialTheme.typography.labelMedium,
+                fontWeight = FontWeight.SemiBold,
             )
         }
     }
 }
-
 @Composable
 fun MoreSection(resourceLink: String, youtubeLink: String) {
     val context = LocalContext.current
@@ -248,34 +244,49 @@ fun MoreSection(resourceLink: String, youtubeLink: String) {
         modifier = Modifier
             .fillMaxSize()
             .adaptiveHeight(0.7f)
-            .padding(MaterialTheme.dimens.medium1),   
+            .padding(MaterialTheme.dimens.medium1),
         verticalArrangement = Arrangement.Top,
-        horizontalAlignment = Alignment.Start
     ) {
         item {
-            MoreSectionItem(
-                modifier = Modifier.clickable {
-                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(resourceLink))
-                    context.startActivity(intent)
-                },
-                text = "Resource",
-                iconRes = R.drawable.baseline_insert_link_24
-            )
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable {
+                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(resourceLink))
+                        context.startActivity(intent)
+                    },
+                horizontalArrangement = Arrangement.Start,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                MoreSectionItem(
+                    text = "Resource",
+                    iconRes = R.drawable.baseline_insert_link_24
+                )
+            }
         }
 
         item {
-            Spacer(modifier = Modifier.height(MaterialTheme.dimens.small2))   
-            MoreSectionItem(
-                modifier = Modifier.clickable {
-                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(youtubeLink))
-                    context.startActivity(intent)
-                },
-                text = "YouTube Link",
-                iconRes = R.drawable.baseline_youtube_icon,
-            )
+            Spacer(modifier = Modifier.height(MaterialTheme.dimens.small2))
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable {
+                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(youtubeLink))
+                        context.startActivity(intent)
+                    },
+                horizontalArrangement = Arrangement.Start,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                MoreSectionItem(
+                    text = "YouTube Link",
+                    iconRes = R.drawable.baseline_youtube_icon
+                )
+            }
         }
     }
 }
+
 
 @SuppressLint("ModifierFactoryUnreferencedReceiver")
 @Composable

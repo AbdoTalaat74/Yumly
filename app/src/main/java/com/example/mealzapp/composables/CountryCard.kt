@@ -11,17 +11,17 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import com.example.mealzapp.meals.data.local.Meal
 import com.example.mealzapp.meals.domain.getAria.getAreaModel
+import com.example.mealzapp.ui.theme.dimens
 
 @Composable
 fun CountryCard(
@@ -29,11 +29,11 @@ fun CountryCard(
     onClick: (countryName: String) -> Unit
 ) {
     Card(
-        elevation = CardDefaults.cardElevation(4.dp),
+        elevation = CardDefaults.cardElevation(MaterialTheme.dimens.small1),
         modifier = Modifier
-            .size(100.dp)
-            .padding(horizontal = 4.dp)
-            .padding(bottom = 16.dp)
+            .size(MaterialTheme.dimens.smallCardSize)
+            .padding(horizontal = MaterialTheme.dimens.small1)
+            .padding(bottom = MaterialTheme.dimens.small3)
             .clickable { meal.strArea?.let { onClick(it) } }
     ) {
         Column(
@@ -45,20 +45,23 @@ fun CountryCard(
             Image(
                 painter = rememberAsyncImagePainter(meal.strArea?.let { getAreaModel(it) }),
                 contentDescription = meal.strArea,
-                contentScale = ContentScale.Crop,  // Ensures proper cropping
+                contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .size(50.dp)
-                    .padding(top = 8.dp, start = 8.dp, end = 8.dp)
+                    .size(MaterialTheme.dimens.large)
+                    .padding(
+                        top = MaterialTheme.dimens.small2,
+                        start = MaterialTheme.dimens.small2,
+                        end = MaterialTheme.dimens.small2
+                    )
             )
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(MaterialTheme.dimens.small2))
             Text(
                 text = meal.strArea ?: "",
-                fontSize = 16.sp,
+                style = MaterialTheme.typography.titleMedium,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 8.dp)
             )
         }
     }

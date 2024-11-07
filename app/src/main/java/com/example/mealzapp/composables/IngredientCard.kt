@@ -1,57 +1,59 @@
 package com.example.mealzapp.composables
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import com.example.mealzapp.meals.data.local.Meal
+import com.example.mealzapp.ui.theme.dimens
+
 @Composable
 fun IngredientCard(ingredient: Meal, onClick: (Meal) -> Unit) {
 
     Card(
-        shape = RoundedCornerShape(16.dp),
-        elevation = CardDefaults.cardElevation(4.dp),
+        shape = RoundedCornerShape(MaterialTheme.dimens.small3),
+        elevation = CardDefaults.cardElevation(MaterialTheme.dimens.small1),
         modifier = Modifier
-            .width(200.dp)
-            .padding(horizontal = 4.dp)
-            .clickable { onClick(ingredient) }
+            .width(MaterialTheme.dimens.cardWidth)
+            .padding(horizontal = MaterialTheme.dimens.small1)
+            .clickable {
+                onClick(ingredient)
+            }
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
             modifier = Modifier.fillMaxWidth()
+                .padding(bottom = MaterialTheme.dimens.small2)
+
         ) {
-            Log.e("IngredientCardImage",ingredient.strIngredient?:"Empty")
             val painter = "https://www.themealdb.com/images/ingredients/${ingredient.strIngredient}.png"
+
             Image(
                 painter = rememberAsyncImagePainter(painter),
 
                 contentDescription = ingredient.strIngredient,
-                contentScale = ContentScale.Crop,  // Ensures proper cropping
+                contentScale = ContentScale.FillBounds,
                 modifier = Modifier
-                    .height(150.dp)
-                    .width(150.dp)
+                    .size(MaterialTheme.dimens.imageSize)
             )
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(MaterialTheme.dimens.small2))
             Text(
                 text = ingredient.strIngredient ?: "",
-                fontSize = 16.sp,
+                style = MaterialTheme.typography.titleMedium,
                 textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp)
+                modifier = Modifier.fillMaxWidth().padding(horizontal = MaterialTheme.dimens.small2)
             )
-            Spacer(modifier = Modifier.height(8.dp))
         }
     }
 }

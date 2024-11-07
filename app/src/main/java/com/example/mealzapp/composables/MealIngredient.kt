@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -17,13 +18,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.mealzapp.R
 import com.example.mealzapp.ui.theme.Orange
+import com.example.mealzapp.ui.theme.dimens
 
 @SuppressLint("SuspiciousIndentation")
 @Composable
@@ -42,7 +42,7 @@ fun MealIngredient(
                     onClick(ingredient)
                 }
             }
-            .padding(8.dp)
+            .padding(MaterialTheme.dimens.small2)
 
         , verticalAlignment = Alignment.CenterVertically
     ) {
@@ -52,21 +52,21 @@ fun MealIngredient(
             placeholder = painterResource(R.drawable.meal_ingredient_empty),
             error = painterResource(R.drawable.meal_ingredient_empty),
             modifier = Modifier
-                .size(64.dp)
+                .size(MaterialTheme.dimens.extraLarge)
                 .clip(
                     CircleShape
                 )
                 .border(2.dp, Orange, CircleShape)
-                .padding(8.dp)
+                .padding(MaterialTheme.dimens.small2)
         )
 
-        Spacer(modifier = Modifier.width(24.dp))
+        Spacer(modifier = Modifier.width(MaterialTheme.dimens.small2))
         if (!ingredient.isNullOrEmpty()) {
             Text(
                 modifier = Modifier.align(Alignment.CenterVertically),
                 text = ingredient,
                 textAlign = TextAlign.Center,
-                style = TextStyle(fontSize = 22.sp)
+                style = MaterialTheme.typography.headlineMedium
             )
         }
         if (!measure.isNullOrBlank()) {
@@ -74,7 +74,8 @@ fun MealIngredient(
                 modifier = Modifier.fillMaxWidth(),
                 text = measure,
                 textAlign = TextAlign.End,
-                style = TextStyle(fontSize = 16.sp, color = Color.Gray)
+                style = MaterialTheme.typography.titleMedium,
+                color = Color.Gray
             )
 
         }

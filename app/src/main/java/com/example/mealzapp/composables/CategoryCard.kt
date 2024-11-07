@@ -6,46 +6,50 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import com.example.mealzapp.meals.data.local.Category
+import com.example.mealzapp.ui.theme.dimens
 
 @Composable
 fun CategoryCard(category: Category,onClick:(Category)->Unit) {
     Card(
-        shape = RoundedCornerShape(8.dp),
-        elevation = CardDefaults.cardElevation(4.dp),
+        shape = RoundedCornerShape(MaterialTheme.dimens.small3),
+        elevation = CardDefaults.cardElevation(MaterialTheme.dimens.small1),
         modifier = Modifier
-            .padding(horizontal = 4.dp)
-            .clickable { onClick(category) }
+            .width(MaterialTheme.dimens.cardWidth)
+            .padding(horizontal = MaterialTheme.dimens.small1)
+            .clickable {
+                onClick(category)
+            }
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            verticalArrangement = Arrangement.Center,
+            modifier = Modifier.fillMaxWidth()
+                .padding(bottom = MaterialTheme.dimens.small2)
         ) {
             Image(
                 painter = rememberAsyncImagePainter(category.strCategoryThumb),
+
                 contentDescription = category.strCategory,
                 contentScale = ContentScale.FillBounds,
                 modifier = Modifier
-                    .height(150.dp)
-                    .width(150.dp)
-
+                    .size(MaterialTheme.dimens.imageSize)
             )
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(MaterialTheme.dimens.small2))
             Text(
                 text = category.strCategory,
-                fontSize = 20.sp,
+                style = MaterialTheme.typography.titleMedium,
                 textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth().padding(horizontal = MaterialTheme.dimens.small2)
             )
-            Spacer(modifier = Modifier.height(8.dp))
         }
     }
 }
