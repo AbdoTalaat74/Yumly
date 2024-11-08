@@ -23,7 +23,7 @@ fun CategoryCard(category: Category,onClick:(Category)->Unit) {
         shape = RoundedCornerShape(MaterialTheme.dimens.small3),
         elevation = CardDefaults.cardElevation(MaterialTheme.dimens.small1),
         modifier = Modifier
-            .width(MaterialTheme.dimens.cardWidth)
+            .width(MaterialTheme.dimens.smallCardSize2)
             .padding(horizontal = MaterialTheme.dimens.small1)
             .clickable {
                 onClick(category)

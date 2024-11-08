@@ -82,7 +82,7 @@ fun MealScreen(
                 },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .shadow(elevation = MaterialTheme.dimens.small2)   
+                    .shadow(elevation = MaterialTheme.dimens.small2)
             )
         }
     ) { paddingValues ->
@@ -98,6 +98,7 @@ fun MealScreen(
                     contentDescription = "",
                     modifier = Modifier
                         .fillMaxWidth()
+                        .padding(bottom = MaterialTheme.dimens.small1)
                         .height(imageHeight)
                         .clickable {
                             mealState.meal?.strMealThumb?.let { onImageClick(it) }
@@ -109,7 +110,7 @@ fun MealScreen(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(start = MaterialTheme.dimens.small1)   
+                        .padding(start = MaterialTheme.dimens.small1)
                 ) {
                     mealState.meal?.strCategory?.let { categoryName ->
                         InfoRow(
@@ -133,7 +134,7 @@ fun MealScreen(
                         .padding(
                             horizontal = MaterialTheme.dimens.medium1,
                             vertical = MaterialTheme.dimens.small1
-                        ),   
+                        ),
                     selectedTabIndex = pageState.currentPage,
                     containerColor = Color.Unspecified,
                     contentColor = Orange
@@ -144,7 +145,7 @@ fun MealScreen(
                             unselectedContentColor = Color.Gray,
                             text = {
                                 Text(
-                                    fontSize = MaterialTheme.typography.bodyMedium.fontSize,   
+                                    style = MaterialTheme.typography.titleMedium,
                                     text = title
                                 )
                             },
@@ -199,7 +200,7 @@ fun IngredientsSection(meal: Meal, onIngredientClick: (String) -> Unit) {
                 .adaptiveHeight(0.7f)
                 .padding(top = MaterialTheme.dimens.small1)
                 .padding(horizontal = MaterialTheme.dimens.small1)
-        ) { 
+        ) {
             items(ingredients.size) { index ->
                 MealIngredient(
                     ingredient = ingredients[index].first,
@@ -228,7 +229,7 @@ fun InstructionsSection(instructions: String) {
                 modifier = Modifier.padding(
                     horizontal = MaterialTheme.dimens.medium1,
                     vertical = MaterialTheme.dimens.small1
-                ),   
+                ),
                 text = instructions,
                 style = MaterialTheme.typography.labelMedium,
                 fontWeight = FontWeight.SemiBold,

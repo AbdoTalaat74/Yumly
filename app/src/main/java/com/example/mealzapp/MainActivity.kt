@@ -8,6 +8,8 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -25,21 +27,18 @@ import com.example.mealzapp.meals.presentation.mealsScreen.MealsViewModel
 import com.example.mealzapp.meals.presentation.search_screen.SearchScreen
 import com.example.mealzapp.meals.presentation.search_screen.SearchViewModel
 import com.example.mealzapp.ui.theme.MealsAppTheme
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+        installSplashScreen()
         super.onCreate(savedInstanceState)
-
         enableEdgeToEdge()
-
-
         setContent {
             MealsAppTheme(darkTheme = isSystemInDarkTheme()) {
-
                 MealsAroundApp()
-
             }
         }
     }
@@ -50,6 +49,18 @@ fun MealsAroundApp() {
     lateinit var searchType: String
     val navController = rememberNavController()
     val mainViewModel: MainViewModel = hiltViewModel()
+
+
+    val systemUiController = rememberSystemUiController()
+    if(isSystemInDarkTheme()){
+        systemUiController.setSystemBarsColor(
+            color = Color.Transparent
+        )
+    }else{
+        systemUiController.setSystemBarsColor(
+            color = Color.White
+        )
+    }
 
     NavHost(navController = navController, startDestination = "main") {
         composable(route = "main") {

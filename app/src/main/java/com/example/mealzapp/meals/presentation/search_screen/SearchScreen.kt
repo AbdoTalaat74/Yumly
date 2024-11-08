@@ -9,19 +9,20 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.mealzapp.composables.MealCard
 import com.example.mealzapp.composables.SearchBar
 import com.example.mealzapp.meals.data.local.Meal
 import com.example.mealzapp.meals.presentation.mealsScreen.MealsState
 import com.example.mealzapp.ui.theme.PurpleGrey80
+import com.example.mealzapp.ui.theme.dimens
 
 @Composable
 fun SearchScreen(
@@ -60,13 +61,13 @@ fun SearchScreen(
                     },
                     onSearchClick = { searchViewModel.searchMeal(query) }
                 )
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(MaterialTheme.dimens.small3))
 
                 LazyVerticalStaggeredGrid(
                     columns = StaggeredGridCells.Fixed(2),
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(16.dp),
+                        .padding(MaterialTheme.dimens.small3),
                 ) {
                     if (mealsState.meals.isNotEmpty()){
                         items(mealsState.meals.size) { index ->
@@ -89,7 +90,7 @@ fun SearchScreen(
                 if (mealsState.isLoading) {
                     CircularProgressIndicator(
                         color = PurpleGrey80,
-                        modifier = Modifier.padding(16.dp)
+                        modifier = Modifier.padding(MaterialTheme.dimens.small3)
                     )
                 }else {
                     mealsState.error?.let {  error ->

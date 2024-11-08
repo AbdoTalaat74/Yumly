@@ -12,6 +12,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -19,11 +20,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.mealzapp.composables.MealCard
 import com.example.mealzapp.meals.data.local.Meal
 import com.example.mealzapp.ui.theme.PurpleGrey80
+import com.example.mealzapp.ui.theme.dimens
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -41,7 +42,7 @@ fun MealsScreen(
             title = { Text(text = mealsViewModel.topAppBarTitle ?: "Meals") },
             modifier = Modifier
                 .fillMaxWidth()
-                .shadow(elevation = 4.dp),
+                .shadow(elevation = MaterialTheme.dimens.small1),
             navigationIcon = {
                 IconButton(onClick = { onNavigateUpClick() }) {
                     Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
@@ -59,7 +60,11 @@ fun MealsScreen(
                 columns = StaggeredGridCells.Fixed(2),
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(16.dp),
+                    .padding(
+                        top = MaterialTheme.dimens.small3,
+                        start = MaterialTheme.dimens.small3,
+                        end = MaterialTheme.dimens.small3,
+                    ),
             ) {
                 items(state.meals.size) { index ->
                     MealCard(
@@ -81,7 +86,7 @@ fun MealsScreen(
                 ) {
                     CircularProgressIndicator(
                         color = PurpleGrey80,
-                        modifier = Modifier.padding(16.dp)
+                        modifier = Modifier.padding(MaterialTheme.dimens.small3)
                     )
                 }
             }

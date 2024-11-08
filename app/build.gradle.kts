@@ -12,7 +12,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.mealzapp"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
@@ -64,6 +64,7 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.retrofit)
     implementation(libs.gsonConverter)
+    implementation(libs.androidx.appcompat)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -89,7 +90,9 @@ dependencies {
     implementation("me.saket.telephoto:zoomable:0.13.0")
     implementation("androidx.compose.material3:material3-window-size-class:1.3.1")
     implementation("androidx.compose.material3:material3-adaptive-navigation-suite:1.4.0-alpha03")
+    implementation("androidx.core:core-splashscreen:1.0.0")
 
+    implementation ("com.google.accompanist:accompanist-systemuicontroller:0.27.0")
 
 
 

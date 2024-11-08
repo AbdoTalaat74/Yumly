@@ -3,7 +3,6 @@ package com.example.mealzapp.ui.theme
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 data class Dimens(
-    val extraSmall: Dp = 4.dp,
     val small1: Dp = 8.dp,
     val small2: Dp = 12.dp,
     val small3: Dp = 16.dp,
@@ -16,9 +15,13 @@ data class Dimens(
     val imageSize: Dp = 150.dp,
     val cardWidth: Dp = 200.dp,
     val smallCardSize: Dp = 100.dp,
-    val extraLarge:Dp = 64.dp // New value for CompactMediumDimens
-
+    val extraLarge: Dp = 64.dp,
+    val refreshMealsWidth: Dp = 40.dp,
+    val refreshMealsHeight: Dp = 48.dp,
+    val pictureSize:Dp = 180.dp,
+    val smallCardSize2:Dp = 180.dp,
 )
+
 
 val CompactSmallDimens = Dimens(
     small1 = 4.dp,
@@ -33,7 +36,11 @@ val CompactSmallDimens = Dimens(
     imageSize = 120.dp,
     cardWidth = 160.dp,
     smallCardSize = 80.dp,
-    extraLarge = 48.dp
+    extraLarge = 48.dp,
+    refreshMealsWidth = 30.dp,
+    refreshMealsHeight = 36.dp,
+    pictureSize = 120.dp,
+    smallCardSize2 = 150.dp,
 )
 
 val CompactMediumDimens = Dimens(
@@ -49,7 +56,11 @@ val CompactMediumDimens = Dimens(
     imageSize = 150.dp,
     cardWidth = 200.dp,
     smallCardSize = 100.dp,
-    extraLarge = 64.dp
+    extraLarge = 64.dp,
+    refreshMealsWidth = 40.dp,
+    refreshMealsHeight = 48.dp,
+    pictureSize = 150.dp,
+    smallCardSize2 = 180.dp,
 )
 
 val CompactDimens = Dimens(
@@ -65,7 +76,11 @@ val CompactDimens = Dimens(
     imageSize = 180.dp,
     cardWidth = 240.dp,
     smallCardSize = 120.dp,
-    extraLarge = 72.dp
+    extraLarge = 72.dp,
+    refreshMealsWidth = 48.dp,  
+    refreshMealsHeight = 58.dp,
+    pictureSize = 180.dp,
+    smallCardSize2 = 200.dp,
 )
 
 val MediumDimens = Dimens(
@@ -81,7 +96,11 @@ val MediumDimens = Dimens(
     imageSize = 200.dp,
     cardWidth = 260.dp,
     smallCardSize = 140.dp,
-    extraLarge = 80.dp
+    extraLarge = 80.dp,
+    refreshMealsWidth = 56.dp,
+    refreshMealsHeight = 67.dp ,
+    pictureSize = 200.dp,
+    smallCardSize2 = 230.dp,
 )
 
 val ExpandedDimens = Dimens(
@@ -97,5 +116,9 @@ val ExpandedDimens = Dimens(
     imageSize = 240.dp,
     cardWidth = 300.dp,
     smallCardSize = 160.dp,
-    extraLarge = 100.dp
+    extraLarge = 100.dp,
+    refreshMealsWidth = 64.dp, 
+    refreshMealsHeight = 77.dp ,
+    pictureSize = 240.dp,
+    smallCardSize2 = 260.dp,
 )

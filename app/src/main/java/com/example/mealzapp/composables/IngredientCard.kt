@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import coil.compose.rememberAsyncImagePainter
 import com.example.mealzapp.meals.data.local.Meal
 import com.example.mealzapp.ui.theme.dimens
@@ -24,7 +25,7 @@ fun IngredientCard(ingredient: Meal, onClick: (Meal) -> Unit) {
         shape = RoundedCornerShape(MaterialTheme.dimens.small3),
         elevation = CardDefaults.cardElevation(MaterialTheme.dimens.small1),
         modifier = Modifier
-            .width(MaterialTheme.dimens.cardWidth)
+            .width(MaterialTheme.dimens.smallCardSize2)
             .padding(horizontal = MaterialTheme.dimens.small1)
             .clickable {
                 onClick(ingredient)
@@ -52,6 +53,8 @@ fun IngredientCard(ingredient: Meal, onClick: (Meal) -> Unit) {
                 text = ingredient.strIngredient ?: "",
                 style = MaterialTheme.typography.titleMedium,
                 textAlign = TextAlign.Center,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
                 modifier = Modifier.fillMaxWidth().padding(horizontal = MaterialTheme.dimens.small2)
             )
         }
