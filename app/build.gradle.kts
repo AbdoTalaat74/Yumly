@@ -94,6 +94,7 @@ dependencies {
 
     implementation ("com.google.accompanist:accompanist-systemuicontroller:0.27.0")
 
+    implementation ("androidx.work:work-runtime-ktx:2.10.0")
 
 
 

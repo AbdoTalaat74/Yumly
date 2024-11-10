@@ -6,6 +6,8 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.mealzapp.meals.data.local.Meal
@@ -27,7 +29,6 @@ class MainViewModel @Inject constructor(
     private val getIngredientsUseCase: GetIngredientsUseCase,
     private val getCountriesUseCase: GetCountriesUseCase
 ) : ViewModel() {
-
 
     private var _categoryState by mutableStateOf(
         CategoryState(
@@ -140,4 +141,25 @@ class MainViewModel @Inject constructor(
             }
         }
     }
+
+    fun updateRandomMealForNotification(){
+        var meal= emptyList<Meal>()
+        viewModelScope.launch(Dispatchers.IO) {
+            meal = getRandomMealUseCase()
+        }
+        SharedData.updateData(meal)
+    }
+
+    object SharedData {
+        private val _sharedRandomMeal = MutableLiveData<List<Meal>>()  // or MutableStateFlow if preferred
+        val data: LiveData<List<Meal>> get() = _sharedRandomMeal
+
+        fun updateData(newValue: List<Meal>) {
+
+            _sharedRandomMeal.value = newValue
+        }
+    }
+
+
+
 }
