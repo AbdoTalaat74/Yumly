@@ -1,5 +1,6 @@
 package com.example.mealzapp.meals.presentation.main
 
+
 import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.derivedStateOf
@@ -10,6 +11,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.work.PeriodicWorkRequestBuilder
 import com.example.mealzapp.meals.data.local.Meal
 import com.example.mealzapp.meals.domain.GetCategoriesUseCase
 import com.example.mealzapp.meals.domain.GetCountriesUseCase
@@ -27,8 +29,9 @@ class MainViewModel @Inject constructor(
     private val getCategoriesUseCase: GetCategoriesUseCase,
     private val getRandomMealUseCase: GetRandomMealUseCase,
     private val getIngredientsUseCase: GetIngredientsUseCase,
-    private val getCountriesUseCase: GetCountriesUseCase
+    private val getCountriesUseCase: GetCountriesUseCase,
 ) : ViewModel() {
+
 
     private var _categoryState by mutableStateOf(
         CategoryState(
@@ -75,6 +78,7 @@ class MainViewModel @Inject constructor(
         getRandomMeals()
         getIngredients()
         getCountries()
+        getRandomMealForNotification()
     }
 
 
@@ -142,23 +146,22 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun updateRandomMealForNotification(){
-        var meal= emptyList<Meal>()
+    private fun getRandomMealForNotification(){
         viewModelScope.launch(Dispatchers.IO) {
-            meal = getRandomMealUseCase()
-        }
-        SharedData.updateData(meal)
-    }
-
-    object SharedData {
-        private val _sharedRandomMeal = MutableLiveData<List<Meal>>()  // or MutableStateFlow if preferred
-        val data: LiveData<List<Meal>> get() = _sharedRandomMeal
-
-        fun updateData(newValue: List<Meal>) {
-
-            _sharedRandomMeal.value = newValue
+            SharedData.updateNotificationMeal(getRandomMealUseCase())
         }
     }
+
+    object SharedData{
+        private var _notificationRandomMeal = MutableLiveData<List<Meal>>()
+        val notificationRandomMeal:LiveData<List<Meal>>
+            get() = _notificationRandomMeal
+
+        fun updateNotificationMeal(newMeal:List<Meal>){
+            _notificationRandomMeal.postValue(newMeal)
+        }
+    }
+
 
 
 

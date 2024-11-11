@@ -95,7 +95,8 @@ dependencies {
     implementation ("com.google.accompanist:accompanist-systemuicontroller:0.27.0")
 
     implementation ("androidx.work:work-runtime-ktx:2.10.0")
-
+    implementation("com.github.bumptech.glide:glide:4.15.0")
+    kapt("com.github.bumptech.glide:compiler:4.15.0")
 
 
 
