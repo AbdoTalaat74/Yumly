@@ -49,7 +49,11 @@ fun SearchScreen(
                     value = query,
                     onQueryChanged = {
                         searchViewModel.updateQuery(it)
-                        searchViewModel.searchMeal(query)
+                        if (query.isEmpty()){
+                            searchViewModel.stopSearch()
+                        }else{
+                            searchViewModel.searchMeal(query)
+                        }
                     },
                     onBackClick = {
                         if (query.isEmpty()){

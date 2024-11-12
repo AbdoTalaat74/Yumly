@@ -35,32 +35,36 @@ class SearchViewModel @Inject constructor(
         _query.value = newQuery
     }
 
-    fun searchMeal(query:String){
+    fun searchMeal(query: String) {
         _mealsState = _mealsState.copy(
             isLoading = true
         )
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val meals = searchMealUseCase.searchMeal(query)
-                if (meals.isNotEmpty()){
+                if (meals.isNotEmpty()) {
                     _mealsState = _mealsState.copy(
                         meals = meals,
                         isLoading = false,
                         error = ""
                     )
                 }
-            }catch (_:Exception){
+
+
+            } catch (_: Exception) {
                 _mealsState = _mealsState.copy(
                     meals = emptyList(),
                     isLoading = false,
                     error = "Sorry, No Meals found!"
                 )
             }
-
         }
+        _mealsState = _mealsState.copy(
+            isLoading = false
+        )
     }
 
-    fun stopSearch(){
+    fun stopSearch() {
         _mealsState = _mealsState.copy(
             meals = emptyList(),
             isLoading = false,

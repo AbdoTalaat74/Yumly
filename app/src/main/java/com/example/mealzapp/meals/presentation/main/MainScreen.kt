@@ -86,6 +86,7 @@ fun MainScreen(
                     end = MaterialTheme.dimens.small2
                 )
         ) {
+
             LazyColumn(
                 modifier = Modifier.fillMaxSize()
 
@@ -223,7 +224,6 @@ fun MainScreen(
 
                 }
             }
-
             if (state.isLoading || randomMealsState.isLoading) {
                 Box(
                     modifier = Modifier
