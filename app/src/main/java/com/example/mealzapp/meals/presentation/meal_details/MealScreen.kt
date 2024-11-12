@@ -288,8 +288,6 @@ fun MoreSection(resourceLink: String, youtubeLink: String) {
         }
     }
 }
-
-
 @SuppressLint("ModifierFactoryUnreferencedReceiver")
 @Composable
 fun Modifier.adaptiveHeight(fraction: Float): Modifier {
