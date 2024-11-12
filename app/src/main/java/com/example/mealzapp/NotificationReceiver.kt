@@ -2,12 +2,14 @@ package com.example.mealzapp
 
 import android.app.NotificationManager
 import android.app.PendingIntent
+import android.app.TaskStackBuilder
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.util.Log
 import androidx.core.app.NotificationCompat
+import androidx.core.net.toUri
 import com.example.mealzapp.meals.presentation.main.MainViewModel
 
 class NotificationReceiver : BroadcastReceiver() {
@@ -23,16 +25,19 @@ class NotificationReceiver : BroadcastReceiver() {
             val notificationManager =
                 context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             val mealId = mealsList.first().idMeal
-            val intent = Intent(Intent.ACTION_VIEW).apply {
-                data = Uri.parse("myapp://meal/$mealId") // Use the deep link format
-                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+
+            val intent = Intent().apply {
+                action = Intent.ACTION_VIEW
+                data = "myapp://meal/$mealId".toUri()
             }
-            val pendingIntent = PendingIntent.getActivity(
-                context,
-                0,
-                intent,
-                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-            )
+
+            val pendingIntent = TaskStackBuilder.create(context).run {
+                addNextIntentWithParentStack(intent)
+                getPendingIntent(
+                    1234,
+                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+                )
+            }
             val notification = NotificationCompat.Builder(
                 context,
                 "daily_meal_channel"

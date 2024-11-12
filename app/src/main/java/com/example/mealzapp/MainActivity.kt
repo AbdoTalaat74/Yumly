@@ -36,6 +36,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import androidx.navigation.navDeepLink
 import com.example.mealzapp.meals.presentation.full_image.FullImageViewModel
 import com.example.mealzapp.meals.presentation.main.MainScreen
 import com.example.mealzapp.meals.presentation.main.MainViewModel
@@ -67,8 +68,8 @@ class MainActivity : ComponentActivity() {
         val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
         val calendar = Calendar.getInstance().apply {
-            set(Calendar.HOUR_OF_DAY, 0)  // 1 PM
-            set(Calendar.MINUTE, 9)
+            set(Calendar.HOUR_OF_DAY, 21)  // 1 PM
+            set(Calendar.MINUTE, 52)
             set(Calendar.SECOND, 0)
             set(Calendar.MILLISECOND, 0)
         }
@@ -135,16 +136,6 @@ class MainActivity : ComponentActivity() {
             )
         }
 
-        val intentUri = intent?.data
-        val mealId = intentUri?.lastPathSegment // Extract meal_id from the deep link URI
-
-        // Pass meal_id to the NavController if a deep link is present
-        LaunchedEffect(mealId) {
-            mealId?.let {
-                navController.navigate("meal/$it")
-            }
-        }
-
         NavHost(navController = navController, startDestination = "main") {
 
             composable(route = "main") {
@@ -196,11 +187,13 @@ class MainActivity : ComponentActivity() {
                 )
             }
 
-            composable(route = "meal/{meal_id}", arguments = listOf(
-                navArgument("meal_id") {
-                    type = NavType.IntType
-                }
-            )
+            composable(
+                deepLinks = listOf(navDeepLink { uriPattern = "myapp://meal/{meal_id}" }),
+                route = "meal/{meal_id}", arguments = listOf(
+                    navArgument("meal_id") {
+                        type = NavType.IntType
+                    }
+                )
             ) {
                 val mealDetailsViewModel: MealDetailsViewModel = hiltViewModel()
 

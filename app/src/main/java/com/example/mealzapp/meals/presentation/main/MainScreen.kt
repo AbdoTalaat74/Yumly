@@ -86,16 +86,6 @@ fun MainScreen(
                     end = MaterialTheme.dimens.small2
                 )
         ) {
-            if (state.isLoading || randomMealsState.isLoading) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(MaterialTheme.dimens.small2),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator(color = PurpleGrey80)
-                }
-            }
             LazyColumn(
                 modifier = Modifier.fillMaxSize()
 
@@ -231,6 +221,17 @@ fun MainScreen(
                         }
                     }
 
+                }
+            }
+
+            if (state.isLoading || randomMealsState.isLoading) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(MaterialTheme.dimens.small2),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator(color = PurpleGrey80)
                 }
             }
         }
