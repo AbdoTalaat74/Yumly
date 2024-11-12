@@ -33,7 +33,6 @@ fun MealIngredient(
     onClick: (ingredient: String) -> Unit
 
 ) {
-
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -74,7 +73,7 @@ fun MealIngredient(
                 modifier = Modifier.fillMaxWidth(),
                 text = measure,
                 textAlign = TextAlign.End,
-                style = MaterialTheme.typography.titleMedium,
+                style = MaterialTheme.typography.labelLarge,
                 color = Color.Gray
             )
 

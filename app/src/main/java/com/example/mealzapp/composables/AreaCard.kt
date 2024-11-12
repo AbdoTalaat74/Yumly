@@ -33,15 +33,17 @@ fun AreaCard(
         elevation = CardDefaults.cardElevation(MaterialTheme.dimens.small2), // Adjusted for elevation
         modifier = Modifier
             .padding(MaterialTheme.dimens.small1)
-            .clickable {
-                onClick(area)
-            }
     ) {
         Row(
-            modifier = Modifier.padding(
-                horizontal = MaterialTheme.dimens.small1,
-                vertical = MaterialTheme.dimens.small1
-            ),
+            modifier = Modifier
+                .padding(
+                    horizontal = MaterialTheme.dimens.small1,
+                    vertical = MaterialTheme.dimens.small1
+                )
+                .clickable {
+                    onClick(area)
+                },
+
             verticalAlignment = Alignment.CenterVertically
         ) {
             AsyncImage(
@@ -49,7 +51,7 @@ fun AreaCard(
                 contentDescription = null,
                 placeholder = painterResource(R.drawable.ic_area),
                 modifier = Modifier
-                    .size(MaterialTheme.dimens.medium3) // Adjusted for image size
+                    .size(MaterialTheme.dimens.medium3)
             )
 
             Spacer(modifier = Modifier.width(MaterialTheme.dimens.small1))
@@ -57,7 +59,7 @@ fun AreaCard(
             Text(
                 text = area,
                 textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.headlineMedium,
+                style = MaterialTheme.typography.labelLarge,
                 fontWeight = FontWeight.SemiBold,
             )
         }

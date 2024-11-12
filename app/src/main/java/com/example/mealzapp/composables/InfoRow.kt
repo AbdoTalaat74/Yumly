@@ -23,21 +23,22 @@ import com.example.mealzapp.ui.theme.Orange
 import com.example.mealzapp.ui.theme.dimens
 
 @Composable
-fun InfoRow(iconRes: Painter, text: String, onClick:(String)->Unit,categoryName: String) {
+fun InfoRow(iconRes: Painter, text: String, onClick: (String) -> Unit, categoryName: String) {
     Card(
         shape = RoundedCornerShape(MaterialTheme.dimens.small1),
         elevation = CardDefaults.cardElevation(MaterialTheme.dimens.small2),
         modifier = Modifier
             .padding(MaterialTheme.dimens.small1)
-            .clickable { onClick(categoryName) }
 
 
-    ){
+    ) {
         Row(
-            modifier = Modifier.padding(
-                horizontal = MaterialTheme.dimens.small1,
-                vertical = MaterialTheme.dimens.small1
-            ),
+            modifier = Modifier
+                .padding(
+                    horizontal = MaterialTheme.dimens.small1,
+                    vertical = MaterialTheme.dimens.small1
+                )
+                .clickable { onClick(categoryName) },
             verticalAlignment = Alignment.CenterVertically
 
         ) {
@@ -51,11 +52,11 @@ fun InfoRow(iconRes: Painter, text: String, onClick:(String)->Unit,categoryName:
 
             Spacer(modifier = Modifier.width(MaterialTheme.dimens.small1))
 
-                Text(
-                    text = text,
-                    textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.headlineMedium,
-                    fontWeight = FontWeight.SemiBold,
+            Text(
+                text = text,
+                textAlign = TextAlign.Center,
+                style = MaterialTheme.typography.labelLarge,
+                fontWeight = FontWeight.SemiBold,
 
                 )
 

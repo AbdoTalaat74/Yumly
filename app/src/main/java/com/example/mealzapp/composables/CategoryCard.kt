@@ -25,15 +25,16 @@ fun CategoryCard(category: Category,onClick:(Category)->Unit) {
         modifier = Modifier
             .width(MaterialTheme.dimens.smallCardSize2)
             .padding(horizontal = MaterialTheme.dimens.small1)
-            .clickable {
-                onClick(category)
-            }
+
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
             modifier = Modifier.fillMaxWidth()
                 .padding(bottom = MaterialTheme.dimens.small2)
+                .clickable {
+                    onClick(category)
+                }
         ) {
             Image(
                 painter = rememberAsyncImagePainter(category.strCategoryThumb),
@@ -46,7 +47,7 @@ fun CategoryCard(category: Category,onClick:(Category)->Unit) {
             Spacer(modifier = Modifier.height(MaterialTheme.dimens.small2))
             Text(
                 text = category.strCategory,
-                style = MaterialTheme.typography.titleMedium,
+                style = MaterialTheme.typography.labelLarge,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth().padding(horizontal = MaterialTheme.dimens.small2)
             )

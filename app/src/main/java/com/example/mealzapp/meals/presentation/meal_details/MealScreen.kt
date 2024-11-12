@@ -231,7 +231,7 @@ fun InstructionsSection(instructions: String) {
                     vertical = MaterialTheme.dimens.small1
                 ),
                 text = instructions,
-                style = MaterialTheme.typography.labelMedium,
+                style = MaterialTheme.typography.labelLarge,
                 fontWeight = FontWeight.SemiBold,
             )
         }
@@ -247,21 +247,22 @@ fun MoreSection(resourceLink: String, youtubeLink: String) {
             .adaptiveHeight(0.7f)
             .padding(MaterialTheme.dimens.medium1),
         verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.Start
     ) {
         item {
             Row(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable {
-                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(resourceLink))
-                        context.startActivity(intent)
-                    },
+                    .fillMaxWidth(),
                 horizontalArrangement = Arrangement.Start,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 MoreSectionItem(
                     text = "Resource",
-                    iconRes = R.drawable.baseline_insert_link_24
+                    iconRes = R.drawable.baseline_insert_link_24,
+                    onClick = {
+                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(resourceLink))
+                        context.startActivity(intent)
+                    }
                 )
             }
         }
@@ -271,17 +272,17 @@ fun MoreSection(resourceLink: String, youtubeLink: String) {
 
             Row(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable {
-                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(youtubeLink))
-                        context.startActivity(intent)
-                    },
+                    .fillMaxWidth(),
                 horizontalArrangement = Arrangement.Start,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 MoreSectionItem(
                     text = "YouTube Link",
-                    iconRes = R.drawable.baseline_youtube_icon
+                    iconRes = R.drawable.baseline_youtube_icon,
+                    onClick = {
+                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(youtubeLink))
+                        context.startActivity(intent)
+                    }
                 )
             }
         }

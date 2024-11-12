@@ -27,15 +27,16 @@ fun IngredientCard(ingredient: Meal, onClick: (Meal) -> Unit) {
         modifier = Modifier
             .width(MaterialTheme.dimens.smallCardSize2)
             .padding(horizontal = MaterialTheme.dimens.small1)
-            .clickable {
-                onClick(ingredient)
-            }
+
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
             modifier = Modifier.fillMaxWidth()
                 .padding(bottom = MaterialTheme.dimens.small2)
+                .clickable {
+                    onClick(ingredient)
+                }
 
         ) {
             val painter = "https://www.themealdb.com/images/ingredients/${ingredient.strIngredient}.png"
@@ -51,7 +52,7 @@ fun IngredientCard(ingredient: Meal, onClick: (Meal) -> Unit) {
             Spacer(modifier = Modifier.height(MaterialTheme.dimens.small2))
             Text(
                 text = ingredient.strIngredient ?: "",
-                style = MaterialTheme.typography.titleMedium,
+                style = MaterialTheme.typography.labelLarge,
                 textAlign = TextAlign.Center,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,

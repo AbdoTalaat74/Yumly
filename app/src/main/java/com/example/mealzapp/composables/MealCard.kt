@@ -28,13 +28,14 @@ fun MealCard(meal: Meal, onClick: (Meal) -> Unit, isInMainScreen: Boolean = fals
             .width(MaterialTheme.dimens.cardWidth)
             .padding(bottom = MaterialTheme.dimens.small3)
             .padding(horizontal = MaterialTheme.dimens.small1)
-            .clickable { onClick(meal) }
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
             modifier = Modifier.fillMaxWidth()
                 .padding(bottom = MaterialTheme.dimens.small2)
+                .clickable { onClick(meal) }
+
         ) {
             Image(
                 painter = rememberAsyncImagePainter(meal.strMealThumb),
@@ -47,7 +48,7 @@ fun MealCard(meal: Meal, onClick: (Meal) -> Unit, isInMainScreen: Boolean = fals
             Spacer(modifier = Modifier.height(MaterialTheme.dimens.small2))
             Text(
                 text = meal.strMeal ?: "",
-                style = MaterialTheme.typography.titleMedium,
+                style = MaterialTheme.typography.labelLarge,
                 textAlign = TextAlign.Center,
                 maxLines = if (isInMainScreen) 1 else 10,
                 overflow = TextOverflow.Ellipsis,

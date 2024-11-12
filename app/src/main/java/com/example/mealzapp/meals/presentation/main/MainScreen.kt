@@ -102,7 +102,7 @@ fun MainScreen(
                     ) {
                         Text(
                             text = stringResource(R.string.random_meals),
-                            style = MaterialTheme.typography.headlineMedium
+                            style = MaterialTheme.typography.headlineLarge
                         )
 
                         Card(
@@ -155,7 +155,7 @@ fun MainScreen(
                     Text(
                         modifier = Modifier.padding(start = MaterialTheme.dimens.small1),
                         text = stringResource(R.string.categories),
-                        style = MaterialTheme.typography.headlineMedium,
+                        style = MaterialTheme.typography.headlineLarge,
 
                         )
                     Spacer(modifier = Modifier.height(MaterialTheme.dimens.small2))
@@ -177,7 +177,7 @@ fun MainScreen(
                     Text(
                         modifier = Modifier.padding(start = 4.dp),
                         text = stringResource(R.string.ingredients),
-                        style = MaterialTheme.typography.headlineMedium
+                        style = MaterialTheme.typography.headlineLarge
 
                     )
 
@@ -200,7 +200,7 @@ fun MainScreen(
                     Text(
                         modifier = Modifier.padding(start = MaterialTheme.dimens.small1),
                         text = stringResource(R.string.countries),
-                        style = MaterialTheme.typography.headlineMedium,
+                        style = MaterialTheme.typography.headlineLarge,
                     )
                     Spacer(modifier = Modifier.height(MaterialTheme.dimens.small2))
                     LazyRow(

@@ -34,12 +34,14 @@ fun CountryCard(
             .size(MaterialTheme.dimens.smallCardSize)
             .padding(horizontal = MaterialTheme.dimens.small1)
             .padding(bottom = MaterialTheme.dimens.small3)
-            .clickable { meal.strArea?.let { onClick(it) } }
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable { meal.strArea?.let { onClick(it) } }
+
         ) {
 
             Image(
@@ -58,7 +60,7 @@ fun CountryCard(
             Spacer(modifier = Modifier.height(MaterialTheme.dimens.small2))
             Text(
                 text = meal.strArea ?: "",
-                style = MaterialTheme.typography.titleMedium,
+                style = MaterialTheme.typography.labelMedium,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
                     .fillMaxWidth()

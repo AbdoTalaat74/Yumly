@@ -7,11 +7,11 @@ import androidx.compose.ui.unit.sp
 
 val CompactSmallTypography = Typography(
     headlineLarge = TextStyle(
-        fontWeight = FontWeight.ExtraBold,
+        fontWeight = FontWeight.SemiBold,
         fontSize = 18.sp
     ),
     headlineMedium = TextStyle(
-        fontWeight = FontWeight.Bold,
+        fontWeight = FontWeight.SemiBold,
         fontSize = 14.sp
     ),
     titleMedium = TextStyle(
@@ -21,16 +21,20 @@ val CompactSmallTypography = Typography(
     labelMedium = TextStyle(
         fontWeight = FontWeight.Normal,
         fontSize = 12.sp
+    ),
+    labelLarge = TextStyle(
+        fontWeight = FontWeight.Normal,
+        fontSize = 16.sp
     )
 )
 
 val CompactMediumTypography = Typography(
     headlineLarge = TextStyle(
-        fontWeight = FontWeight.ExtraBold,
+        fontWeight = FontWeight.SemiBold,
         fontSize = 24.sp
     ),
     headlineMedium = TextStyle(
-        fontWeight = FontWeight.Bold,
+        fontWeight = FontWeight.SemiBold,
         fontSize = 18.sp
     ),
     titleMedium = TextStyle(
@@ -40,16 +44,20 @@ val CompactMediumTypography = Typography(
     labelMedium = TextStyle(
         fontWeight = FontWeight.Normal,
         fontSize = 14.sp
+    ),
+    labelLarge = TextStyle(
+        fontWeight = FontWeight.Normal,
+        fontSize = 18.sp
     )
 )
 
 val CompactTypography = Typography(
     headlineLarge = TextStyle(
-        fontWeight = FontWeight.ExtraBold,
+        fontWeight = FontWeight.SemiBold,
         fontSize = 28.sp
     ),
     headlineMedium = TextStyle(
-        fontWeight = FontWeight.Bold,
+        fontWeight = FontWeight.SemiBold,
         fontSize = 20.sp
     ),
     titleMedium = TextStyle(
@@ -59,16 +67,20 @@ val CompactTypography = Typography(
     labelMedium = TextStyle(
         fontWeight = FontWeight.Normal,
         fontSize = 16.sp
+    ),
+    labelLarge = TextStyle(
+        fontWeight = FontWeight.Normal,
+        fontSize = 20.sp
     )
 )
 
 val MediumTypography = Typography(
     headlineLarge = TextStyle(
-        fontWeight = FontWeight.ExtraBold,
+        fontWeight = FontWeight.SemiBold,
         fontSize = 32.sp
     ),
     headlineMedium = TextStyle(
-        fontWeight = FontWeight.Bold,
+        fontWeight = FontWeight.SemiBold,
         fontSize = 24.sp
     ),
     titleMedium = TextStyle(
@@ -83,11 +95,11 @@ val MediumTypography = Typography(
 
 val ExpandedTypography = Typography(
     headlineLarge = TextStyle(
-        fontWeight = FontWeight.ExtraBold,
+        fontWeight = FontWeight.SemiBold,
         fontSize = 36.sp
     ),
     headlineMedium = TextStyle(
-        fontWeight = FontWeight.Bold,
+        fontWeight = FontWeight.SemiBold,
         fontSize = 28.sp
     ),
     titleMedium = TextStyle(
@@ -97,5 +109,9 @@ val ExpandedTypography = Typography(
     labelMedium = TextStyle(
         fontWeight = FontWeight.Normal,
         fontSize = 20.sp
+    ),
+    labelLarge = TextStyle(
+        fontWeight = FontWeight.Normal,
+        fontSize = 24.sp
     )
 )
