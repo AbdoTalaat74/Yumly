@@ -80,11 +80,7 @@ fun MainScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .padding(
-                    top = MaterialTheme.dimens.small2,
-                    start = MaterialTheme.dimens.small2,
-                    end = MaterialTheme.dimens.small2
-                )
+                .padding(top = MaterialTheme.dimens.small1,)
         ) {
 
             LazyColumn(

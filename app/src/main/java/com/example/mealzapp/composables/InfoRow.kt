@@ -35,7 +35,7 @@ fun InfoRow(iconRes: Painter, text: String, onClick: (String) -> Unit, categoryN
         Row(
             modifier = Modifier
                 .padding(
-                    horizontal = MaterialTheme.dimens.small1,
+                    horizontal = MaterialTheme.dimens.small2,
                     vertical = MaterialTheme.dimens.small1
                 )
                 .clickable { onClick(categoryName) },

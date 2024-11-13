@@ -29,15 +29,15 @@ fun AreaCard(
     onClick: (area: String) -> Unit,
 ) {
     Card(
-        shape = RoundedCornerShape(MaterialTheme.dimens.small1), // Adjusted for rounded corners
-        elevation = CardDefaults.cardElevation(MaterialTheme.dimens.small2), // Adjusted for elevation
+        shape = RoundedCornerShape(MaterialTheme.dimens.small1),
+        elevation = CardDefaults.cardElevation(MaterialTheme.dimens.small2),
         modifier = Modifier
             .padding(MaterialTheme.dimens.small1)
     ) {
         Row(
             modifier = Modifier
                 .padding(
-                    horizontal = MaterialTheme.dimens.small1,
+                    horizontal = MaterialTheme.dimens.small2,
                     vertical = MaterialTheme.dimens.small1
                 )
                 .clickable {

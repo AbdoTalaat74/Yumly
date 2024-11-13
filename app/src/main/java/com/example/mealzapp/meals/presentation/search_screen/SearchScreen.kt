@@ -65,13 +65,13 @@ fun SearchScreen(
                     },
                     onSearchClick = { searchViewModel.searchMeal(query) }
                 )
-                Spacer(modifier = Modifier.height(MaterialTheme.dimens.small3))
+                Spacer(modifier = Modifier.height(MaterialTheme.dimens.small2))
 
                 LazyVerticalStaggeredGrid(
                     columns = StaggeredGridCells.Fixed(2),
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(MaterialTheme.dimens.small3),
+                        .padding(horizontal = MaterialTheme.dimens.small3),
                 ) {
                     if (mealsState.meals.isNotEmpty()){
                         items(mealsState.meals.size) { index ->

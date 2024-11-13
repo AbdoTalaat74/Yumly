@@ -11,11 +11,13 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.mealzapp.ui.theme.dimens
 
@@ -30,10 +32,8 @@ fun SearchBar(
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .padding(
-                horizontal = MaterialTheme.dimens.small3,
-                vertical = MaterialTheme.dimens.small2
-            )
+            .padding(horizontal = MaterialTheme.dimens.small3,)
+            .padding(top = MaterialTheme.dimens.small2)
             .background(
                 color = CardDefaults.cardColors().containerColor, // Adjust the color as needed
                 shape = RoundedCornerShape(MaterialTheme.dimens.medium2)
@@ -54,7 +54,9 @@ fun SearchBar(
                 value = value,
                 onValueChange = {
                     onQueryChanged(it)
-                },
+                }
+                ,cursorBrush = SolidColor(LocalContentColor.current),
+                textStyle = MaterialTheme.typography.labelMedium.copy(color = LocalContentColor.current),
                 singleLine = true,
                 modifier = modifier
                     .weight(1f)
@@ -69,15 +71,4 @@ fun SearchBar(
             }
         }
     }
-}
-
-@Preview(showSystemUi = true)
-@Composable
-fun SearchBarPreview() {
-    SearchBar(
-        value = "Beef",
-        onSearchClick = {},
-        onQueryChanged = {},
-        onBackClick = {}
-    )
 }

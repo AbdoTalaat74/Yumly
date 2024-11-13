@@ -60,11 +60,7 @@ fun MealsScreen(
                 columns = StaggeredGridCells.Fixed(2),
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(
-                        top = MaterialTheme.dimens.small3,
-                        start = MaterialTheme.dimens.small3,
-                        end = MaterialTheme.dimens.small3,
-                    ),
+                    .padding(top = MaterialTheme.dimens.small3,)
             ) {
                 items(state.meals.size) { index ->
                     MealCard(
