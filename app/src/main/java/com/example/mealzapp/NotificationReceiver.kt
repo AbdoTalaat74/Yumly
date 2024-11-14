@@ -16,9 +16,17 @@ import com.example.mealzapp.meals.presentation.main.MainViewModel
 
 class NotificationReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
-        Log.e("NotificationReceiverCheck", "NotificationReceiver is working")
         if (context != null) {
-            showNotification(context)
+            Log.e("NotificationReceiverCheck", "onReceive")
+            MainViewModel.SharedData.hasNotificationPermission.value?.let {
+                Log.e("NotificationReceiverCheck", "hasNotificationPermission not null")
+                if (it){
+                    Log.e("NotificationReceiverCheck","Permission Granted")
+                    showNotification(context)
+                }else{
+                    Log.e("NotificationReceiverCheck","Permission Denied")
+                }
+            }
         }
     }
     private fun showNotification(context: Context) {

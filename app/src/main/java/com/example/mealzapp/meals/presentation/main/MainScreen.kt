@@ -36,6 +36,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.mealzapp.R
 import com.example.mealzapp.composables.CategoryCard
@@ -67,7 +68,9 @@ fun MainScreen(
         modifier = Modifier
             .fillMaxSize(),
         topBar = {
-        TopAppBar(title = { Text(text = "Meals App") }, actions = {
+        TopAppBar(
+            title = { Text(text = stringResource(R.string.app_name),) },
+            actions = {
             IconButton(onClick = { onSearchClick() }) {
                 Icon(Icons.Default.Search, contentDescription = "Search")
             }

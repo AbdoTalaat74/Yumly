@@ -105,12 +105,14 @@ class MainActivity : ComponentActivity() {
                 )
             } else mutableStateOf(true)
         }
+        MainViewModel.SharedData.updateNotificationPermission(hasNotificationPermission)
+
 
         val permissionLauncher = rememberLauncherForActivityResult(
             contract = ActivityResultContracts.RequestPermission(),
             onResult = { isGranted ->
                 hasNotificationPermission = isGranted
-
+                MainViewModel.SharedData.updateNotificationPermission(hasNotificationPermission)
             }
         )
 

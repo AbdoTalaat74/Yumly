@@ -160,6 +160,14 @@ class MainViewModel @Inject constructor(
         fun updateNotificationMeal(newMeal:List<Meal>){
             _notificationRandomMeal.postValue(newMeal)
         }
+
+        private var _hasNotificationPermission = MutableLiveData<Boolean>()
+        val hasNotificationPermission:LiveData<Boolean>
+            get() = _hasNotificationPermission
+
+        fun updateNotificationPermission(boolean: Boolean){
+            _hasNotificationPermission.postValue(boolean)
+        }
     }
 
 
