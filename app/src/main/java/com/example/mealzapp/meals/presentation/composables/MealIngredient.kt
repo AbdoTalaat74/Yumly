@@ -1,4 +1,4 @@
-package com.example.mealzapp.composables
+package com.example.mealzapp.meals.presentation.composables
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.border

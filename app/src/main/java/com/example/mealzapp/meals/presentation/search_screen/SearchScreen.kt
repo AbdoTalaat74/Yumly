@@ -11,15 +11,15 @@ import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.mealzapp.composables.MealCard
-import com.example.mealzapp.composables.SearchBar
+import com.example.mealzapp.meals.presentation.composables.MealCard
+import com.example.mealzapp.meals.presentation.composables.SearchBar
 import com.example.mealzapp.meals.data.local.Meal
+import com.example.mealzapp.meals.presentation.composables.EmptyScreen
 import com.example.mealzapp.meals.presentation.mealsScreen.MealsState
 import com.example.mealzapp.ui.theme.PurpleGrey80
 import com.example.mealzapp.ui.theme.dimens
@@ -94,9 +94,7 @@ fun SearchScreen(
                     )
                 }else {
                     mealsState.error?.let {  error ->
-                        if (error.isNotEmpty() ) {
-                            Text(text =error)
-                        }
+                        EmptyScreen(error)
                     }
 
                 }

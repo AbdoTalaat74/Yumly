@@ -39,10 +39,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.example.mealzapp.R
-import com.example.mealzapp.composables.AreaCard
-import com.example.mealzapp.composables.InfoRow
-import com.example.mealzapp.composables.MealIngredient
-import com.example.mealzapp.composables.MoreSectionItem
+import com.example.mealzapp.meals.presentation.composables.AreaCard
+import com.example.mealzapp.meals.presentation.composables.InfoRow
+import com.example.mealzapp.meals.presentation.composables.MealIngredient
+import com.example.mealzapp.meals.presentation.composables.MoreSectionItem
 import com.example.mealzapp.meals.data.local.Meal
 import com.example.mealzapp.meals.data.local.getIngredientsList
 import com.example.mealzapp.ui.theme.Orange

@@ -21,7 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.mealzapp.composables.MealCard
+import com.example.mealzapp.meals.presentation.composables.MealCard
 import com.example.mealzapp.meals.data.local.Meal
 import com.example.mealzapp.ui.theme.PurpleGrey80
 import com.example.mealzapp.ui.theme.dimens

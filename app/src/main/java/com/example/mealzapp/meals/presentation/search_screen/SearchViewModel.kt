@@ -7,6 +7,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.mealzapp.meals.core.NetworkError
 import com.example.mealzapp.meals.domain.SearchMealUseCase
 import com.example.mealzapp.meals.presentation.mealsScreen.MealsState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -46,14 +47,14 @@ class SearchViewModel @Inject constructor(
                     _mealsState = _mealsState.copy(
                         meals = meals,
                         isLoading = false,
-                        error = ""
+                        error = null
                     )
                 }
             }catch (_:Exception){
                 _mealsState = _mealsState.copy(
                     meals = emptyList(),
                     isLoading = false,
-                    error = "Sorry, No Meals found!"
+                    error = NetworkError.UNKNOWN_ERROR
                 )
             }
 
@@ -64,7 +65,7 @@ class SearchViewModel @Inject constructor(
         _mealsState = _mealsState.copy(
             meals = emptyList(),
             isLoading = false,
-            error = ""
+            error = null
         )
     }
 }
