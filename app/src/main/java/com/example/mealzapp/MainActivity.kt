@@ -115,8 +115,9 @@ fun MealsAroundApp() {
             navArgument("search_type") { NavType.StringType }
         )) {
             val mealsViewModel: MealsViewModel = hiltViewModel()
+            val mealsState by mealsViewModel.mealsState.collectAsState()
             MealsScreen(
-                state = mealsViewModel.mealsState.value,
+                state = mealsState,
                 onItemClick = {
                     navController.navigate(route = "meal/${it.idMeal}")
                     Log.i("MealIdNavigation", it.idMeal.toString())
@@ -132,10 +133,10 @@ fun MealsAroundApp() {
         )
         ) {
             val mealDetailsViewModel: MealDetailsViewModel = hiltViewModel()
+            val mealState by mealDetailsViewModel.mealState.collectAsState()
+            val categoryName = mealState.meal?.strCategory
 
-            val categoryName = mealDetailsViewModel.mealState.value.meal?.strCategory
-
-            MealScreen(mealDetailsViewModel.mealState.value, onCategoryClick = {
+            MealScreen(mealState, onCategoryClick = {
                 searchType = "category"
                 navController.navigate(route = "meals/$categoryName/$searchType")
             },
@@ -168,8 +169,9 @@ fun MealsAroundApp() {
 
         composable(route = "search") {
             val searchViewModel: SearchViewModel = hiltViewModel()
+            val state by searchViewModel.mealsState.collectAsState()
             SearchScreen(
-                mealsState = searchViewModel.mealsState.value,
+                mealsState = state,
                 navigateUp = {
                     navController.navigateUp()
                 },

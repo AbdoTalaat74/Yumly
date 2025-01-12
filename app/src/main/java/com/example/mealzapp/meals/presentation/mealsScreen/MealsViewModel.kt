@@ -1,19 +1,18 @@
 package com.example.mealzapp.meals.presentation.mealsScreen
 
-import androidx.compose.runtime.State
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.mealzapp.meals.core.NetworkError
 import com.example.mealzapp.meals.data.local.Meal
 import com.example.mealzapp.meals.domain.GetMealsByAreaUseCase
 import com.example.mealzapp.meals.domain.GetMealsByCategoryUseCase
 import com.example.mealzapp.meals.domain.GetMealsByIngredientUseCase
+import com.example.mealzapp.meals.domain.util.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -26,14 +25,13 @@ class MealsViewModel @Inject constructor(
 ) : ViewModel() {
     private var filterKey: String
     private var filterType:String
-    private var _mealsState by mutableStateOf(
+    private var _mealsState = MutableStateFlow(
         MealsState(
             meals = emptyList(),
             isLoading = false,
         )
     )
-    val mealsState: State<MealsState>
-        get() = derivedStateOf { _mealsState }
+    val mealsState: StateFlow<MealsState> = _mealsState
     private var currentPage = 0
     private var endReached = false
     private val pageSize = 8
@@ -50,58 +48,115 @@ class MealsViewModel @Inject constructor(
 
 
     private fun getMealsByCategoryName(categoryName: String) {
-        if (_mealsState.isLoading || endReached) return
-        _mealsState = _mealsState.copy(
+        if (_mealsState.value.isLoading || endReached) return
+        _mealsState.value = _mealsState.value.copy(
             isLoading = true
         )
         viewModelScope.launch(Dispatchers.IO) {
-            val newMeals = getMealsByCategoryUseCase.getMealsByCategory(
-                categoryName,
-                currentPage * pageSize,
-                pageSize
-            )
-            updateMealStateWithNewMeals(newMeals)
+
+            try {
+                val result = getMealsByCategoryUseCase.getMealsByCategory(
+                    categoryName,
+                    currentPage * pageSize,
+                    pageSize
+                )
+                when(result){
+                    is Result.Error -> {
+                        _mealsState.value = _mealsState.value.copy(
+                            isLoading = false,
+                            error = result.error
+                        )
+                    }
+                    is Result.Success -> {
+                        updateMealStateWithNewMeals(result.data)
+
+                    }
+                }
+            }catch (e:Exception){
+                _mealsState.value = _mealsState.value.copy(
+                    isLoading = false,
+                    error = NetworkError.UNKNOWN_ERROR
+                )
+            }
+
+
         }
     }
     private fun getMealsByAreaName(areaName: String) {
-        if (_mealsState.isLoading || endReached) return
-        _mealsState = _mealsState.copy(
+        if (_mealsState.value.isLoading || endReached) return
+        _mealsState.value = _mealsState.value.copy(
             isLoading = true
         )
         viewModelScope.launch(Dispatchers.IO) {
-            val newMeals = getMealsByAreaUseCase.getMealsByArea(
-                areaName,
-                currentPage * pageSize,
-                pageSize
-            )
-            updateMealStateWithNewMeals(newMeals)
+            try {
+                val result = getMealsByAreaUseCase.getMealsByArea(
+                    areaName,
+                    currentPage * pageSize,
+                    pageSize
+                )
+                when(result){
+                    is Result.Error -> {
+                        _mealsState.value = _mealsState.value.copy(
+                            isLoading = false,
+                            error = result.error
+                        )
+                    }
+                    is Result.Success -> {
+                        updateMealStateWithNewMeals(result.data)
+
+                    }
+                }
+            }catch (e:Exception){
+                _mealsState.value = _mealsState.value.copy(
+                    isLoading = false,
+                    error = NetworkError.UNKNOWN_ERROR
+                )
+            }
         }
     }
     private fun getMealsByIngredient(ingredient: String) {
-        if (_mealsState.isLoading || endReached) return
-        _mealsState = _mealsState.copy(
+        if (_mealsState.value.isLoading || endReached) return
+        _mealsState.value = _mealsState.value.copy(
             isLoading = true
         )
         viewModelScope.launch(Dispatchers.IO) {
-            val newMeals = getMealsByIngredientUseCase.getMealsByIngredient(
-                ingredient,
-                currentPage * pageSize,
-                pageSize
-            )
-            updateMealStateWithNewMeals(newMeals)
+            try {
+                val result = getMealsByIngredientUseCase.getMealsByIngredient(
+                    ingredient,
+                    currentPage * pageSize,
+                    pageSize
+                )
+                when(result){
+                    is Result.Error -> {
+                        _mealsState.value = _mealsState.value.copy(
+                            isLoading = false,
+                            error = result.error
+                        )
+                    }
+                    is Result.Success -> {
+                        updateMealStateWithNewMeals(result.data)
+
+                    }
+                }
+            }catch (e:Exception){
+                _mealsState.value = _mealsState.value.copy(
+                    isLoading = false,
+                    error = NetworkError.UNKNOWN_ERROR
+                )
+            }
         }
     }
     private fun updateMealStateWithNewMeals(newMeals: List<Meal>) {
         if (newMeals.isNotEmpty()) {
-            _mealsState = _mealsState.copy(
-                meals = _mealsState.meals + newMeals,
+            _mealsState.value = _mealsState.value.copy(
+                meals = _mealsState.value.meals + newMeals,
                 isLoading = false
             )
             currentPage++
         } else {
             endReached = true
         }
-        _mealsState = _mealsState.copy(
+        _mealsState.value = _mealsState.value.copy(
             isLoading = false
         )
     }

@@ -16,21 +16,21 @@ interface MealsApiService {
     @GET("filter.php")
     suspend fun getMealsByCategory(
         @Query("c") categoryName: String
-    ): MealsResponse
+    ): Response<MealsResponse>
     @GET("lookup.php")
     suspend fun getMealDetails(
         @Query("i") mealId:Int
-    ): MealsResponse
+    ): Response<MealsResponse>
 
     @GET("filter.php")
     suspend fun getMealsByArea(
         @Query("a") areaName: String
-    ): MealsResponse
+    ): Response<MealsResponse>
 
     @GET("filter.php")
     suspend fun getMealsByIngredient(
         @Query("i") ingredient: String
-    ): MealsResponse
+    ): Response<MealsResponse>
 
     @GET("random.php")
     suspend fun getRandomMeal(): Response<MealResponse>
@@ -44,7 +44,7 @@ interface MealsApiService {
     @GET("search.php")
     suspend fun searchMeal(
         @Query("s") mealName:String
-    ): MealsResponse
+    ): Response<MealsResponse>
 }
 
 

@@ -6,6 +6,7 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
@@ -34,26 +35,21 @@ import com.example.mealzapp.meals.core.NetworkError
 @Composable
 fun EmptyScreen(
     error: NetworkError? = null,
-    isSearchError:Boolean = false
+    isSearchError: Boolean = false
 ) {
 
     val message by remember {
         mutableStateOf(parseErrorMessage(error = error))
     }
 
-    val icon by remember {
+    var icon by remember {
         mutableIntStateOf(R.drawable.ic_network_error)
     }
 
-//    if (error == null){
-//        if (isSearchError){
-//            message = "No Articles found!"
-//            icon = R.drawable.ic_search_document
-//        }else{
-//            message = "You have not saved news so far !"
-//            icon = R.drawable.ic_search_document
-//        }
-//    }
+    if (isSearchError) {
+//        message = "No Results Found, Try to search about another meal."
+        icon = R.drawable.ic_search_document
+    }
 
     var startAnimation by remember {
         mutableStateOf(false)
@@ -75,7 +71,7 @@ fun EmptyScreen(
 @Composable
 fun EmptyContent(alphaAnim: Float, message: String, iconId: Int) {
     Surface(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxWidth(),
         color = MaterialTheme.colorScheme.background
     ) {
         Column(
@@ -107,7 +103,7 @@ fun EmptyContent(alphaAnim: Float, message: String, iconId: Int) {
 
 
 fun parseErrorMessage(error: NetworkError?): String {
-    return if (error != null){
+    return if (error != null) {
         when (error) {
             NetworkError.REQUEST_TIMEOUT -> "The request timed out. Please check your internet connection and try again."
             NetworkError.TOO_MANY_REQUESTS -> "You’re making requests too quickly. Please wait a moment and try again."
@@ -115,8 +111,9 @@ fun parseErrorMessage(error: NetworkError?): String {
             NetworkError.SERIALIZATION -> "We’re having trouble processing the data. Please try again later."
             NetworkError.UNKNOWN_ERROR -> "An unexpected error occurred. Please try again."
             NetworkError.NO_INTERNET_CONNECTION -> "No internet connection. Please check your internet connection and try again."
+            NetworkError.NO_RESULTS_FOUND -> "No Results Found, Try to search about another meal."
         }
-    }else{
+    } else {
         "Unknown Error"
     }
 }

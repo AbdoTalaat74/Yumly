@@ -23,6 +23,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.mealzapp.meals.presentation.composables.MealCard
 import com.example.mealzapp.meals.data.local.Meal
+import com.example.mealzapp.meals.presentation.composables.EmptyScreen
 import com.example.mealzapp.ui.theme.PurpleGrey80
 import com.example.mealzapp.ui.theme.dimens
 
@@ -31,7 +32,7 @@ import com.example.mealzapp.ui.theme.dimens
 fun MealsScreen(
     state: MealsState,
     onItemClick: (Meal) -> Unit,
-    onNavigateUpClick:()-> Unit
+    onNavigateUpClick: () -> Unit
 ) {
     val mealsViewModel: MealsViewModel = hiltViewModel()
 
@@ -51,46 +52,51 @@ fun MealsScreen(
         )
     }
     ) { paddingValues ->
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-        ) {
-            LazyVerticalStaggeredGrid(
-                columns = StaggeredGridCells.Fixed(2),
+        if (state.error != null) {
+            EmptyScreen(error = state.error)
+        } else {
+            Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(
-                        top = MaterialTheme.dimens.small3,
-                        start = MaterialTheme.dimens.small3,
-                        end = MaterialTheme.dimens.small3,
-                    ),
+                    .padding(paddingValues)
             ) {
-                items(state.meals.size) { index ->
-                    MealCard(
-                        meal = state.meals[index],
-                        onClick = {
-                            onItemClick(it)
+                LazyVerticalStaggeredGrid(
+                    columns = StaggeredGridCells.Fixed(2),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(
+                            top = MaterialTheme.dimens.small3,
+                            start = MaterialTheme.dimens.small3,
+                            end = MaterialTheme.dimens.small3,
+                        ),
+                ) {
+                    items(state.meals.size) { index ->
+                        MealCard(
+                            meal = state.meals[index],
+                            onClick = {
+                                onItemClick(it)
+                            }
+                        )
+                        if (index == state.meals.size - 1) {
+                            mealsViewModel.loadMeals()
                         }
-                    )
-                    if (index == state.meals.size - 1) {
-                        mealsViewModel.loadMeals()
+                    }
+                }
+
+                if (state.isLoading) {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator(
+                            color = PurpleGrey80,
+                            modifier = Modifier.padding(MaterialTheme.dimens.small3)
+                        )
                     }
                 }
             }
-
-            if (state.isLoading) {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator(
-                        color = PurpleGrey80,
-                        modifier = Modifier.padding(MaterialTheme.dimens.small3)
-                    )
-                }
-            }
         }
+
 
     }
 

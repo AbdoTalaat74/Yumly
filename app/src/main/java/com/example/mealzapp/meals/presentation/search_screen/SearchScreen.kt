@@ -12,6 +12,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,82 +32,74 @@ fun SearchScreen(
     onItemClick: (Meal) -> Unit
 ) {
     val searchViewModel: SearchViewModel = hiltViewModel()
-    val query by searchViewModel.query
-
+    val query by searchViewModel.query.collectAsState()
 
     Scaffold(
+        modifier = Modifier
+            .fillMaxSize()
     ) { paddingValues ->
-        Box(
+        Column(
             modifier = Modifier
-                .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-            ) {
-                SearchBar(
-                    value = query,
-                    onQueryChanged = {
-                        searchViewModel.updateQuery(it)
-                        searchViewModel.searchMeal(query)
-                    },
-                    onBackClick = {
-                        if (query.isEmpty()){
-                            navigateUp()
-                        }else{
-                            searchViewModel.updateQuery("")
-                            searchViewModel.stopSearch()
-                        }
-                    },
-                    onSearchClick = { searchViewModel.searchMeal(query) }
-                )
-                Spacer(modifier = Modifier.height(MaterialTheme.dimens.small3))
-
+            SearchBar(
+                value = query,
+                onQueryChanged = {
+                    searchViewModel.updateQuery(it)
+                    searchViewModel.searchMeal(query)
+                },
+                onBackClick = {
+                    if (query.isEmpty()) {
+                        navigateUp()
+                    } else {
+                        searchViewModel.updateQuery("")
+                        searchViewModel.stopSearch()
+                    }
+                },
+                onSearchClick = { searchViewModel.searchMeal(query) }
+            )
+            Spacer(modifier = Modifier.height(MaterialTheme.dimens.small3))
+            if (mealsState.meals.isNotEmpty()) {
                 LazyVerticalStaggeredGrid(
                     columns = StaggeredGridCells.Fixed(2),
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(MaterialTheme.dimens.small3),
                 ) {
-                    if (mealsState.meals.isNotEmpty()){
-                        items(mealsState.meals.size) { index ->
-                            MealCard(
-                                meal = mealsState.meals[index],
-                                onClick = {
-                                    onItemClick(it)
-                                }
-                            )
-                        }
-                    }else {
-                        return@LazyVerticalStaggeredGrid
+                    items(mealsState.meals.size) { index ->
+                        MealCard(
+                            meal = mealsState.meals[index],
+                            onClick = {
+                                onItemClick(it)
+                            }
+                        )
                     }
                 }
+            } else if (query.isNotEmpty() && mealsState.error != null) {
+                EmptyScreen(error = mealsState.error, isSearchError = true)
             }
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                if (mealsState.isLoading) {
-                    CircularProgressIndicator(
-                        color = PurpleGrey80,
-                        modifier = Modifier.padding(MaterialTheme.dimens.small3)
-                    )
-                }else {
-                    mealsState.error?.let {  error ->
-                        EmptyScreen(error)
-                    }
 
-                }
+        }
 
 
+
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            if (mealsState.isLoading) {
+                CircularProgressIndicator(
+                    color = PurpleGrey80,
+                    modifier = Modifier.padding(MaterialTheme.dimens.small3)
+                )
             }
 
 
         }
 
 
-
     }
 
+
 }
+
