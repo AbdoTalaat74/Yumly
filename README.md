@@ -30,4 +30,4 @@ Technologies used:
 
 ⬥ Coil: For loading and displaying images effectively.
 
-Download the app: https://lnkd.in/dJAr9_WN
+Download the app: https://drive.google.com/file/d/1SFVIgR7IPAbKakOSw_8XUuN0NXdU0zxG/view?usp=drive_link
