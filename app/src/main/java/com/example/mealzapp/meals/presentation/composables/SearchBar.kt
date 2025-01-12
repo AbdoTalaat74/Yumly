@@ -1,4 +1,4 @@
-package com.example.mealzapp.composables
+package com.example.mealzapp.meals.presentation.composables
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*

@@ -1,45 +1,50 @@
 package com.example.mealzapp.meals.data.remote
 
+import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface MealsApiService {
 
+//    @GET("categories.php")
+//    suspend fun getCategories(): CategoryResponse
+
     @GET("categories.php")
-    suspend fun getCategories(): CategoryResponse
+    suspend fun getCategories(): Response<CategoryResponse>
+
 
     @GET("filter.php")
     suspend fun getMealsByCategory(
         @Query("c") categoryName: String
-    ): MealsResponse
+    ): Response<MealsResponse>
     @GET("lookup.php")
     suspend fun getMealDetails(
         @Query("i") mealId:Int
-    ): MealsResponse
+    ): Response<MealsResponse>
 
     @GET("filter.php")
     suspend fun getMealsByArea(
         @Query("a") areaName: String
-    ): MealsResponse
+    ): Response<MealsResponse>
 
     @GET("filter.php")
     suspend fun getMealsByIngredient(
         @Query("i") ingredient: String
-    ): MealsResponse
+    ): Response<MealsResponse>
 
     @GET("random.php")
-    suspend fun getRandomMeal(): MealsResponse
+    suspend fun getRandomMeal(): Response<MealResponse>
 
     @GET("list.php?i=list")
-    suspend fun getIngredients(): MealsResponse
+    suspend fun getIngredients(): Response<MealsResponse>
 
     @GET("list.php?a=list")
-    suspend fun getCountries(): MealsResponse
+    suspend fun getCountries(): Response<MealsResponse>
 
     @GET("search.php")
     suspend fun searchMeal(
         @Query("s") mealName:String
-    ): MealsResponse
+    ): Response<MealsResponse>
 }
 
 

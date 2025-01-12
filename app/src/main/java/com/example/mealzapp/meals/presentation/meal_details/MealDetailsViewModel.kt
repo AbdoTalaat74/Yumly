@@ -2,18 +2,17 @@ package com.example.mealzapp.meals.presentation.meal_details
 
 
 import android.util.Log
-import androidx.compose.runtime.State
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.mealzapp.meals.core.NetworkError
 import com.example.mealzapp.meals.data.local.Meal
 import com.example.mealzapp.meals.domain.GetMealDetailsUseCase
+import com.example.mealzapp.meals.domain.util.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -24,13 +23,14 @@ class MealDetailsViewModel @Inject constructor(
 ) : ViewModel() {
 
     private var mealId: Int
-    private var _mealState by mutableStateOf(
+    private var _mealState = MutableStateFlow(
         MealState(
             meal = Meal(),
             isLoading = true,
+            error = null
         )
     )
-    val mealState: State<MealState> = derivedStateOf { _mealState }
+    val mealState: StateFlow<MealState> = _mealState
 
 
     init {
@@ -52,18 +52,41 @@ class MealDetailsViewModel @Inject constructor(
     private fun getMealDetails(mealId: Int) {
 
         viewModelScope.launch(Dispatchers.Main) {
-            val meal = getMealDetailsUseCase.getMealDetails(mealId).meals.firstOrNull()
-            if (meal != null) {
-                _mealState = _mealState.copy(
-                    meal = meal,
-                    isLoading = false
+//            val meal = getMealDetailsUseCase.getMealDetails(mealId).meals.firstOrNull()
+//            if (meal != null) {
+//                _mealState = _mealState.copy(
+//                    meal = meal,
+//                    isLoading = false
+//                )
+//                Log.e("MealDetailsViewModelGetMeal", "Meal Fetched Successfully: \n $meal.")
+//            } else {
+//                Log.e("MealDetailsViewModelGetMeal", "Error.")
+//            }
+//            Log.e("MealDetailsViewModelGetMeal", "Meal Fetched Successfully: \n $meal.")
+//
+            try {
+                val result = getMealDetailsUseCase.getMealDetails(mealId)
+                _mealState.value = when(result){
+                    is Result.Error -> {
+                        _mealState.value.copy(
+                            isLoading = false,
+                            error = result.error
+                        )
+                    }
+                    is Result.Success -> {
+                        _mealState.value.copy(
+                            isLoading = false,
+                            error = null,
+                            meal = result.data.meals.firstOrNull()
+                        )
+                    }
+                }
+            }catch (e:Exception){
+                _mealState.value = _mealState.value.copy(
+                    isLoading = false,
+                    error = NetworkError.UNKNOWN_ERROR
                 )
-                Log.e("MealDetailsViewModelGetMeal", "Meal Fetched Successfully: \n $meal.")
-            } else {
-                Log.e("MealDetailsViewModelGetMeal", "Error.")
             }
-            Log.e("MealDetailsViewModelGetMeal", "Meal Fetched Successfully: \n $meal.")
-
 
         }
 

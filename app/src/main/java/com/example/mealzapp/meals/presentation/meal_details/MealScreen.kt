@@ -39,12 +39,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.example.mealzapp.R
-import com.example.mealzapp.composables.AreaCard
-import com.example.mealzapp.composables.InfoRow
-import com.example.mealzapp.composables.MealIngredient
-import com.example.mealzapp.composables.MoreSectionItem
+import com.example.mealzapp.meals.presentation.composables.AreaCard
+import com.example.mealzapp.meals.presentation.composables.InfoRow
+import com.example.mealzapp.meals.presentation.composables.MealIngredient
+import com.example.mealzapp.meals.presentation.composables.MoreSectionItem
 import com.example.mealzapp.meals.data.local.Meal
 import com.example.mealzapp.meals.data.local.getIngredientsList
+import com.example.mealzapp.meals.presentation.composables.EmptyScreen
 import com.example.mealzapp.ui.theme.Orange
 import com.example.mealzapp.ui.theme.dimens
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -86,107 +87,112 @@ fun MealScreen(
             )
         }
     ) { paddingValues ->
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            item {
-                Image(
-                    painter = rememberAsyncImagePainter(mealState.meal?.strMealThumb),
-                    contentDescription = "",
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = MaterialTheme.dimens.small1)
-                        .height(imageHeight)
-                        .clickable {
-                            mealState.meal?.strMealThumb?.let { onImageClick(it) }
-                        },
-                    contentScale = ContentScale.Crop,
-                )
-            }
-            item {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = MaterialTheme.dimens.small1)
-                ) {
-                    mealState.meal?.strCategory?.let { categoryName ->
-                        InfoRow(
-                            iconRes = painterResource(R.drawable.category),
-                            text = categoryName,
-                            onClick = { onCategoryClick(categoryName) },
-                            categoryName = categoryName
-                        )
-                    }
-
-                    val mealArea = mealState.meal?.strArea ?: "Unknown"
-                    AreaCard(area = mealArea) {
-                        onAreaClick(it)
-                    }
-                }
-            }
-            item {
-                TabRow(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(
-                            horizontal = MaterialTheme.dimens.medium1,
-                            vertical = MaterialTheme.dimens.small1
-                        ),
-                    selectedTabIndex = pageState.currentPage,
-                    containerColor = Color.Unspecified,
-                    contentColor = Orange
-                ) {
-                    tabTitles.forEachIndexed { index, title ->
-                        Tab(
-                            selectedContentColor = Orange,
-                            unselectedContentColor = Color.Gray,
-                            text = {
-                                Text(
-                                    style = MaterialTheme.typography.titleMedium,
-                                    text = title
-                                )
+        if (mealState.error != null){
+            EmptyScreen(error = mealState.error)
+        }else{
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                item {
+                    Image(
+                        painter = rememberAsyncImagePainter(mealState.meal?.strMealThumb),
+                        contentDescription = "",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = MaterialTheme.dimens.small1)
+                            .height(imageHeight)
+                            .clickable {
+                                mealState.meal?.strMealThumb?.let { onImageClick(it) }
                             },
-                            selected = pageState.currentPage == index,
-                            onClick = {
-                                scope.launch {
-                                    pageState.scrollToPage(index)
-                                }
-                            }
-                        )
-                    }
+                        contentScale = ContentScale.Crop,
+                    )
                 }
-            }
-
-            item {
-                HorizontalPager(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .fillMaxHeight(),
-                    count = tabTitles.size,
-                    state = pageState,
-                ) { page ->
-                    when (page) {
-                        0 -> mealState.meal?.let { meal ->
-                            IngredientsSection(meal, onIngredientClick = { ingredient ->
-                                onIngredientClick(ingredient)
-                            })
+                item {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(start = MaterialTheme.dimens.small1)
+                    ) {
+                        mealState.meal?.strCategory?.let { categoryName ->
+                            InfoRow(
+                                iconRes = painterResource(R.drawable.category),
+                                text = categoryName,
+                                onClick = { onCategoryClick(categoryName) },
+                                categoryName = categoryName
+                            )
                         }
 
-                        1 -> mealState.meal?.strInstructions?.let { InstructionsSection(it) }
-                        2 -> mealState.meal?.let {
-                            MoreSection(
-                                it.strSource ?: "https://www.google.com",
-                                it.strYoutube ?: "https://www.youtube.com/"
+                        val mealArea = mealState.meal?.strArea ?: "Unknown"
+                        AreaCard(area = mealArea) {
+                            onAreaClick(it)
+                        }
+                    }
+                }
+                item {
+                    TabRow(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(
+                                horizontal = MaterialTheme.dimens.medium1,
+                                vertical = MaterialTheme.dimens.small1
+                            ),
+                        selectedTabIndex = pageState.currentPage,
+                        containerColor = Color.Unspecified,
+                        contentColor = Orange
+                    ) {
+                        tabTitles.forEachIndexed { index, title ->
+                            Tab(
+                                selectedContentColor = Orange,
+                                unselectedContentColor = Color.Gray,
+                                text = {
+                                    Text(
+                                        style = MaterialTheme.typography.titleMedium,
+                                        text = title
+                                    )
+                                },
+                                selected = pageState.currentPage == index,
+                                onClick = {
+                                    scope.launch {
+                                        pageState.scrollToPage(index)
+                                    }
+                                }
                             )
                         }
                     }
                 }
-            }
 
+                item {
+                    HorizontalPager(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .fillMaxHeight(),
+                        count = tabTitles.size,
+                        state = pageState,
+                    ) { page ->
+                        when (page) {
+                            0 -> mealState.meal?.let { meal ->
+                                IngredientsSection(meal, onIngredientClick = { ingredient ->
+                                    onIngredientClick(ingredient)
+                                })
+                            }
+
+                            1 -> mealState.meal?.strInstructions?.let { InstructionsSection(it) }
+                            2 -> mealState.meal?.let {
+                                MoreSection(
+                                    it.strSource ?: "https://www.google.com",
+                                    it.strYoutube ?: "https://www.youtube.com/"
+                                )
+                            }
+                        }
+                    }
+                }
+
+            }
         }
+
     }
 }
 

@@ -1,16 +1,15 @@
 package com.example.mealzapp.meals.presentation.search_screen
 
-import androidx.compose.runtime.State
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.mealzapp.meals.core.NetworkError
 import com.example.mealzapp.meals.domain.SearchMealUseCase
+import com.example.mealzapp.meals.domain.util.Result
 import com.example.mealzapp.meals.presentation.mealsScreen.MealsState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -19,52 +18,79 @@ class SearchViewModel @Inject constructor(
     private val searchMealUseCase: SearchMealUseCase
 ) : ViewModel() {
 
-    private var _mealsState by mutableStateOf(
+    private var _mealsState = MutableStateFlow(
         MealsState(
             meals = emptyList(),
             isLoading = false
         )
     )
-    val mealsState: State<MealsState>
-        get() = derivedStateOf { _mealsState }
+    val mealsState: StateFlow<MealsState> =  _mealsState
 
-    private val _query = mutableStateOf("")
-    val query: State<String> = _query
+    private val _query = MutableStateFlow("")
+    val query: StateFlow<String> = _query
 
     fun updateQuery(newQuery: String) {
-        _query.value = newQuery
+            _query.value = newQuery
     }
 
     fun searchMeal(query:String){
-        _mealsState = _mealsState.copy(
-            isLoading = true
-        )
-        viewModelScope.launch(Dispatchers.IO) {
-            try {
-                val meals = searchMealUseCase.searchMeal(query)
-                if (meals.isNotEmpty()){
-                    _mealsState = _mealsState.copy(
-                        meals = meals,
+        if (query.isNotEmpty() && query.isNotBlank()){
+            _mealsState.value = _mealsState.value.copy(
+                isLoading = true
+            )
+            viewModelScope.launch(Dispatchers.IO) {
+                try {
+                    when(val result = searchMealUseCase.searchMeal(query)){
+                            is Result.Error -> {
+                                _mealsState.value = _mealsState.value.copy(
+                                    isLoading = false,
+                                    error = result.error
+                                )
+                            }
+                            is Result.Success -> {
+                                _mealsState.value = if (result.data.isNotEmpty()){
+                                    _mealsState.value.copy(
+                                        meals = result.data,
+                                        isLoading = false,
+                                        error = null
+                                    )
+                                }else{
+                                    _mealsState.value.copy(
+                                        meals = emptyList(),
+                                        isLoading = false,
+                                        error = NetworkError.NO_RESULTS_FOUND
+                                    )
+                                }
+                            }
+                        }
+                }
+                catch (e: NullPointerException){
+                    e.printStackTrace()
+                    _mealsState.value = _mealsState.value.copy(
+                        meals = emptyList(),
                         isLoading = false,
-                        error = ""
+                        error = NetworkError.NO_RESULTS_FOUND
                     )
                 }
-            }catch (_:Exception){
-                _mealsState = _mealsState.copy(
-                    meals = emptyList(),
-                    isLoading = false,
-                    error = "Sorry, No Meals found!"
-                )
-            }
+                catch (e:Exception){
+                    e.printStackTrace()
+                    _mealsState.value = _mealsState.value.copy(
+                        meals = emptyList(),
+                        isLoading = false,
+                        error = NetworkError.UNKNOWN_ERROR
+                    )
+                }
 
+            }
         }
+
     }
 
     fun stopSearch(){
-        _mealsState = _mealsState.copy(
+        _mealsState.value = _mealsState.value.copy(
             meals = emptyList(),
             isLoading = false,
-            error = ""
+            error = null
         )
     }
 }

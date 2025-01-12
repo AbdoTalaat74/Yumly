@@ -8,6 +8,8 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -16,6 +18,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.mealzapp.meals.core.NetworkError
+import com.example.mealzapp.meals.presentation.composables.EmptyScreen
 import com.example.mealzapp.meals.presentation.full_image.FullImageViewModel
 import com.example.mealzapp.meals.presentation.main.MainScreen
 import com.example.mealzapp.meals.presentation.main.MainViewModel
@@ -38,7 +42,14 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             MealsAppTheme(darkTheme = isSystemInDarkTheme()) {
-                MealsAroundApp()
+                val mainViewModel: MainViewModel = hiltViewModel()
+                val connectionState by mainViewModel.connectionState.collectAsState()
+                Log.e("CategoryStateError",connectionState.toString())
+                if (connectionState){
+                    MealsAroundApp()
+                }else{
+                    EmptyScreen(error = NetworkError.NO_INTERNET_CONNECTION)
+                }
             }
         }
     }
@@ -49,14 +60,17 @@ fun MealsAroundApp() {
     lateinit var searchType: String
     val navController = rememberNavController()
     val mainViewModel: MainViewModel = hiltViewModel()
-
+    val categoryState by mainViewModel.categoryState.collectAsState()
+    val randomMealsState by mainViewModel.randomMealsState.collectAsState()
+    val ingredientsState by mainViewModel.ingredientsState.collectAsState()
+    val countriesState by mainViewModel.countriesState.collectAsState()
 
     val systemUiController = rememberSystemUiController()
-    if(isSystemInDarkTheme()){
+    if (isSystemInDarkTheme()) {
         systemUiController.setSystemBarsColor(
             color = Color.Transparent
         )
-    }else{
+    } else {
         systemUiController.setSystemBarsColor(
             color = Color.White
         )
@@ -65,11 +79,11 @@ fun MealsAroundApp() {
     NavHost(navController = navController, startDestination = "main") {
         composable(route = "main") {
             MainScreen(
-                state = mainViewModel.categoryState.value,
-                randomMealsState = mainViewModel.randomMealsState.value,
-                ingredientsState = mainViewModel.ingredientsState.value,
-                countriesState = mainViewModel.countriesState.value,
-                onIngredientClick = {ingredientName ->
+                categoryState = categoryState,
+                randomMealsState = randomMealsState,
+                ingredientsState = ingredientsState,
+                countriesState = countriesState,
+                onIngredientClick = { ingredientName ->
                     searchType = "ingredient"
                     navController.navigate(route = "meals/$ingredientName/$searchType")
                 },
@@ -84,7 +98,7 @@ fun MealsAroundApp() {
                 onRefresh = {
                     mainViewModel.refreshRandomMeals()
                 },
-                onCountryClick = {countryName ->
+                onCountryClick = { countryName ->
                     searchType = "area"
                     navController.navigate(route = "meals/$countryName/$searchType")
                 },
@@ -94,18 +108,21 @@ fun MealsAroundApp() {
             )
         }
 
+
+
         composable(route = "meals/{filter_key}/{search_type}", arguments = listOf(
             navArgument("filter_key") { type = NavType.StringType },
             navArgument("search_type") { NavType.StringType }
         )) {
             val mealsViewModel: MealsViewModel = hiltViewModel()
+            val mealsState by mealsViewModel.mealsState.collectAsState()
             MealsScreen(
-                state = mealsViewModel.mealsState.value,
+                state = mealsState,
                 onItemClick = {
                     navController.navigate(route = "meal/${it.idMeal}")
                     Log.i("MealIdNavigation", it.idMeal.toString())
                 },
-                onNavigateUpClick = {navController.navigateUp()}
+                onNavigateUpClick = { navController.navigateUp() }
             )
         }
 
@@ -116,18 +133,17 @@ fun MealsAroundApp() {
         )
         ) {
             val mealDetailsViewModel: MealDetailsViewModel = hiltViewModel()
+            val mealState by mealDetailsViewModel.mealState.collectAsState()
+            val categoryName = mealState.meal?.strCategory
 
-            val categoryName = mealDetailsViewModel.mealState.value.meal?.strCategory
-
-            MealScreen(mealDetailsViewModel.mealState.value, onCategoryClick = {
+            MealScreen(mealState, onCategoryClick = {
                 searchType = "category"
                 navController.navigate(route = "meals/$categoryName/$searchType")
             },
                 onAreaClick = {
                     searchType = "area"
                     navController.navigate(route = "meals/$it/$searchType")
-                }
-                , onIngredientClick = {
+                }, onIngredientClick = {
                     searchType = "ingredient"
                     navController.navigate(route = "meals/$it/$searchType")
                 },
@@ -142,7 +158,7 @@ fun MealsAroundApp() {
         }
 
         composable(route = "mealImage/{image_url}", arguments = listOf(
-            navArgument(name = "image_url"){
+            navArgument(name = "image_url") {
                 type = NavType.StringType
             }
         ))
@@ -151,10 +167,11 @@ fun MealsAroundApp() {
             fullImageViewModel.imageUrl?.let { it1 -> FullImageScreen(it1) }
         }
 
-        composable(route = "search"){
-            val searchViewModel:SearchViewModel = hiltViewModel()
+        composable(route = "search") {
+            val searchViewModel: SearchViewModel = hiltViewModel()
+            val state by searchViewModel.mealsState.collectAsState()
             SearchScreen(
-                mealsState = searchViewModel.mealsState.value,
+                mealsState = state,
                 navigateUp = {
                     navController.navigateUp()
                 },

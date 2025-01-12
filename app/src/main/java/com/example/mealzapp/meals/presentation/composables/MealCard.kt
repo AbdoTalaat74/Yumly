@@ -1,14 +1,9 @@
-package com.example.mealzapp.composables
+package com.example.mealzapp.meals.presentation.composables
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -18,51 +13,49 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import coil.compose.rememberAsyncImagePainter
 import com.example.mealzapp.meals.data.local.Meal
-import com.example.mealzapp.meals.domain.getAria.getAreaModel
 import com.example.mealzapp.ui.theme.dimens
 
 @Composable
-fun CountryCard(
-    meal: Meal,
-    onClick: (countryName: String) -> Unit
-) {
+fun MealCard(meal: Meal, onClick: (Meal) -> Unit, isInMainScreen: Boolean = false) {
+
     Card(
+        shape = RoundedCornerShape(MaterialTheme.dimens.small3),
         elevation = CardDefaults.cardElevation(MaterialTheme.dimens.small1),
         modifier = Modifier
-            .size(MaterialTheme.dimens.smallCardSize)
-            .padding(horizontal = MaterialTheme.dimens.small1)
+            .width(MaterialTheme.dimens.cardWidth)
             .padding(bottom = MaterialTheme.dimens.small3)
-            .clickable { meal.strArea?.let { onClick(it) } }
+            .padding(horizontal = MaterialTheme.dimens.small1)
+            .clickable { onClick(meal) }
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
             modifier = Modifier.fillMaxWidth()
+                .padding(bottom = MaterialTheme.dimens.small2)
         ) {
-
             Image(
-                painter = rememberAsyncImagePainter(meal.strArea?.let { getAreaModel(it) }),
-                contentDescription = meal.strArea,
-                contentScale = ContentScale.Crop,
+                painter = rememberAsyncImagePainter(meal.strMealThumb),
+                contentDescription = meal.strMeal,
+                contentScale = ContentScale.Crop,  // Ensures proper cropping
                 modifier = Modifier
                     .fillMaxWidth()
-                    .size(MaterialTheme.dimens.large)
-                    .padding(
-                        top = MaterialTheme.dimens.small2,
-                        start = MaterialTheme.dimens.small2,
-                        end = MaterialTheme.dimens.small2
-                    )
+                    .height(MaterialTheme.dimens.imageSize)
             )
             Spacer(modifier = Modifier.height(MaterialTheme.dimens.small2))
             Text(
-                text = meal.strArea ?: "",
+                text = meal.strMeal ?: "",
                 style = MaterialTheme.typography.titleMedium,
                 textAlign = TextAlign.Center,
+                maxLines = if (isInMainScreen) 1 else 10,
+                overflow = TextOverflow.Ellipsis,
                 modifier = Modifier
                     .fillMaxWidth()
+                    .padding(horizontal = MaterialTheme.dimens.small2)
             )
         }
     }
 }
+

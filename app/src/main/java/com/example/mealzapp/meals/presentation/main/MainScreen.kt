@@ -38,19 +38,19 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.mealzapp.R
-import com.example.mealzapp.composables.CategoryCard
-import com.example.mealzapp.composables.CountryCard
-import com.example.mealzapp.composables.IngredientCard
-import com.example.mealzapp.composables.MealCard
+import com.example.mealzapp.meals.presentation.composables.CategoryCard
+import com.example.mealzapp.meals.presentation.composables.CountryCard
+import com.example.mealzapp.meals.presentation.composables.IngredientCard
+import com.example.mealzapp.meals.presentation.composables.MealCard
+import com.example.mealzapp.meals.presentation.composables.ShimmerListItem
 import com.example.mealzapp.meals.data.local.Meal
 import com.example.mealzapp.meals.presentation.mealsScreen.MealsState
-import com.example.mealzapp.ui.theme.PurpleGrey80
 import com.example.mealzapp.ui.theme.dimens
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(
-    state: CategoryState,
+    categoryState: CategoryState,
     randomMealsState: RandomMealsState,
     ingredientsState: MealsState,
     countriesState: MealsState,
@@ -63,19 +63,20 @@ fun MainScreen(
 
 ) {
     val isRefreshing = randomMealsState.refreshState
+    val isLoading = true
     Scaffold(
         modifier = Modifier
             .fillMaxSize(),
         topBar = {
-        TopAppBar(title = { Text(text = "Meals App") }, actions = {
-            IconButton(onClick = { onSearchClick() }) {
-                Icon(Icons.Default.Search, contentDescription = "Search")
-            }
-        }, modifier = Modifier
-            .fillMaxWidth()
-            .shadow(elevation = 4.dp)
-        )
-    }) { paddingValues ->
+            TopAppBar(title = { Text(text = "Meals App") }, actions = {
+                IconButton(onClick = { onSearchClick() }) {
+                    Icon(Icons.Default.Search, contentDescription = "Search")
+                }
+            }, modifier = Modifier
+                .fillMaxWidth()
+                .shadow(elevation = 4.dp)
+            )
+        }) { paddingValues ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -86,151 +87,145 @@ fun MainScreen(
                     end = MaterialTheme.dimens.small2
                 )
         ) {
-            if (state.isLoading || randomMealsState.isLoading) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(MaterialTheme.dimens.small2),
-                    contentAlignment = Alignment.Center
+            if (categoryState.isLoading || randomMealsState.isLoading) {
+                ShimmerListItem()
+            } else {
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize()
+
                 ) {
-                    CircularProgressIndicator(color = PurpleGrey80)
-                }
-            }
-            LazyColumn(
-                modifier = Modifier.fillMaxSize()
+                    item {
 
-            ) {
-                item {
-
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = MaterialTheme.dimens.small1),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = stringResource(R.string.random_meals),
-                            style = MaterialTheme.typography.headlineMedium
-                        )
-
-                        Card(
-                            shape = RoundedCornerShape(MaterialTheme.dimens.small2),
-                            elevation = CardDefaults.cardElevation(4.dp),
+                        Row(
                             modifier = Modifier
-                                .width(MaterialTheme.dimens.refreshMealsWidth)
-                                .height(MaterialTheme.dimens.refreshMealsHeight)
-                                .padding(bottom = MaterialTheme.dimens.small2)
+                                .fillMaxWidth()
+                                .padding(horizontal = MaterialTheme.dimens.small1),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = stringResource(R.string.random_meals),
+                                style = MaterialTheme.typography.headlineMedium
+                            )
+
+                            Card(
+                                shape = RoundedCornerShape(MaterialTheme.dimens.small2),
+                                elevation = CardDefaults.cardElevation(4.dp),
+                                modifier = Modifier
+                                    .width(MaterialTheme.dimens.refreshMealsWidth)
+                                    .height(MaterialTheme.dimens.refreshMealsHeight)
+                                    .padding(bottom = MaterialTheme.dimens.small2)
+
+                            ) {
+                                Box(
+                                    contentAlignment = Alignment.Center,
+                                    modifier = Modifier.fillMaxSize()
+                                ) {
+                                    Icon(painter = painterResource(R.drawable.refresh_icon),
+                                        contentDescription = "refresh",
+                                        Modifier
+                                            .alpha(if (isRefreshing) 0f else 1f)
+                                            .padding(MaterialTheme.dimens.small2)
+                                            .size(MaterialTheme.dimens.medium3)
+                                            .clickable {
+                                                if (!isRefreshing) onRefresh()
+                                            })
+
+
+                                    CircularProgressIndicator(
+                                        strokeWidth = 2.dp,
+                                        color = if (isSystemInDarkTheme()) Color.White else Color.Black,
+                                        modifier = Modifier
+                                            .alpha(if (isRefreshing) 1f else 0f)
+                                            .padding(MaterialTheme.dimens.small2)
+                                            .size(MaterialTheme.dimens.medium3)
+                                    )
+                                }
+                            }
+
+
+                        }
+                        LazyRow(
+                            modifier = Modifier.fillMaxWidth()
 
                         ) {
-                            Box(
-                                contentAlignment = Alignment.Center,
-                                modifier = Modifier.fillMaxSize()
-                            ) {
-                                Icon(painter = painterResource(R.drawable.refresh_icon),
-                                    contentDescription = "refresh",
-                                    Modifier
-                                        .alpha(if (isRefreshing) 0f else 1f)
-                                        .padding(MaterialTheme.dimens.small2)
-                                        .size(MaterialTheme.dimens.medium3)
-                                        .clickable {
-                                            if (!isRefreshing) onRefresh()
-                                        })
+                            items(randomMealsState.meals) { meal ->
+                                MealCard(
+                                    meal, onClick = { onMealClick(it) }, isInMainScreen = true
+                                )
+                            }
+                        }
+                        Text(
+                            modifier = Modifier.padding(start = MaterialTheme.dimens.small1),
+                            text = stringResource(R.string.categories),
+                            style = MaterialTheme.typography.headlineMedium,
 
+                            )
+                        Spacer(modifier = Modifier.height(MaterialTheme.dimens.small2))
 
-                                CircularProgressIndicator(
-                                    strokeWidth = 2.dp,
-                                    color = if (isSystemInDarkTheme()) Color.White else Color.Black,
-                                    modifier = Modifier
-                                        .alpha(if (isRefreshing) 1f else 0f)
-                                        .padding(MaterialTheme.dimens.small2)
-                                        .size(MaterialTheme.dimens.medium3)
+                        LazyRow(
+                            modifier = Modifier.fillMaxWidth()
+
+                        ) {
+                            items(categoryState.categories) { category ->
+                                CategoryCard(category = category,
+                                    onClick = { onCategoryClick(category.strCategory) }
+
                                 )
                             }
                         }
 
+                        Spacer(modifier = Modifier.height(MaterialTheme.dimens.small3))
 
-                    }
-                    LazyRow(
-                        modifier = Modifier.fillMaxWidth()
-
-                    ) {
-                        items(randomMealsState.meals) { meal ->
-                            MealCard(
-                                meal, onClick = { onMealClick(it) }, isInMainScreen = true
-                            )
-                        }
-                    }
-                    Text(
-                        modifier = Modifier.padding(start = MaterialTheme.dimens.small1),
-                        text = stringResource(R.string.categories),
-                        style = MaterialTheme.typography.headlineMedium,
+                        Text(
+                            modifier = Modifier.padding(start = 4.dp),
+                            text = stringResource(R.string.ingredients),
+                            style = MaterialTheme.typography.headlineMedium
 
                         )
-                    Spacer(modifier = Modifier.height(MaterialTheme.dimens.small2))
 
-                    LazyRow(
-                        modifier = Modifier.fillMaxWidth()
-
-                    ) {
-                        items(state.categories) { category ->
-                            CategoryCard(category = category,
-                                onClick = { onCategoryClick(category.strCategory) }
-
-                            )
-                        }
-                    }
-
-                    Spacer(modifier = Modifier.height(MaterialTheme.dimens.small3))
-
-                    Text(
-                        modifier = Modifier.padding(start = 4.dp),
-                        text = stringResource(R.string.ingredients),
-                        style = MaterialTheme.typography.headlineMedium
-
-                    )
-
-                    Spacer(modifier = Modifier.height(MaterialTheme.dimens.small2))
+                        Spacer(modifier = Modifier.height(MaterialTheme.dimens.small2))
 
 
-                    LazyRow(
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        items(ingredientsState.meals.size) { index ->
-                            IngredientCard(ingredientsState.meals[index]) {
-                                it.strIngredient?.let { it1 -> onIngredientClick(it1) }
-                            }
-                        }
-                    }
-
-
-                    Spacer(modifier = Modifier.height(MaterialTheme.dimens.small3))
-
-                    Text(
-                        modifier = Modifier.padding(start = MaterialTheme.dimens.small1),
-                        text = stringResource(R.string.countries),
-                        style = MaterialTheme.typography.headlineMedium,
-                    )
-                    Spacer(modifier = Modifier.height(MaterialTheme.dimens.small2))
-                    LazyRow(
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        items(countriesState.meals.size) { index ->
-                            if (!countriesState.meals[index].strArea.equals("Unknown")) {
-                                CountryCard(
-                                    meal = countriesState.meals[index]
-                                ) {
-                                    countriesState.meals[index].strArea?.let { it1 ->
-                                        onCountryClick(
-                                            it1
-                                        )
-                                    }
-
+                        LazyRow(
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            items(ingredientsState.meals.size) { index ->
+                                IngredientCard(ingredientsState.meals[index]) {
+                                    it.strIngredient?.let { it1 -> onIngredientClick(it1) }
                                 }
                             }
                         }
-                    }
 
+
+                        Spacer(modifier = Modifier.height(MaterialTheme.dimens.small3))
+
+                        Text(
+                            modifier = Modifier.padding(start = MaterialTheme.dimens.small1),
+                            text = stringResource(R.string.countries),
+                            style = MaterialTheme.typography.headlineMedium,
+                        )
+                        Spacer(modifier = Modifier.height(MaterialTheme.dimens.small2))
+                        LazyRow(
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            items(countriesState.meals.size) { index ->
+                                if (!countriesState.meals[index].strArea.equals("Unknown")) {
+                                    CountryCard(
+                                        meal = countriesState.meals[index]
+                                    ) {
+                                        countriesState.meals[index].strArea?.let { it1 ->
+                                            onCountryClick(
+                                                it1
+                                            )
+                                        }
+
+                                    }
+                                }
+                            }
+                        }
+
+                    }
                 }
             }
         }
