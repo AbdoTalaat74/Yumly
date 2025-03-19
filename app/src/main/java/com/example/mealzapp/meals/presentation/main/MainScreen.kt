@@ -63,12 +63,11 @@ fun MainScreen(
 
 ) {
     val isRefreshing = randomMealsState.refreshState
-    val isLoading = true
     Scaffold(
         modifier = Modifier
             .fillMaxSize(),
         topBar = {
-            TopAppBar(title = { Text(text = "Meals App") }, actions = {
+            TopAppBar(title = { Text(text = "Yumly") }, actions = {
                 IconButton(onClick = { onSearchClick() }) {
                     Icon(Icons.Default.Search, contentDescription = "Search")
                 }
